@@ -86,8 +86,6 @@ class ProductsController extends Controller
     public function addEditProduct(Request $request, $id = null) { // If the $id is not passed, this means 'Add a Product', if not, this means 'Edit the Product'    
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'products');
-
-
         if ($id == '') { // if there's no $id is passed in the route/URL parameters, this means 'Add a new product'
             $title = 'Add Product';
             $product = new \App\Models\Product();

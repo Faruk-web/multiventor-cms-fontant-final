@@ -72,7 +72,12 @@ $sections = \App\Models\Section::sections();
                                         My Orders
                                     </a>
                                 </li>
-
+                                  <li>
+                                    <a href="{{ url('post/newsfeed') }}"> 
+                                        <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
+                                        Post NewsFeed
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{{ url('user/logout') }}"> 
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
@@ -170,9 +175,6 @@ $sections = \App\Models\Section::sections();
                     @php
                         // dd($_GET);
                     @endphp
-
-
-
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <nav>
@@ -202,17 +204,11 @@ $sections = \App\Models\Section::sections();
         </div>
     </div>
     <!-- Responsive-Buttons /- -->
-
-
-
     <!-- Mini Cart Widget -->
     <div id="appendHeaderCartItems"> {{-- We created the CSS class 'appendHeaderCartItems' to use it in front/js/custom.js to update the total cart items via AJAX in the Mini Cart Wedget, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred --}}
         @include('front.layout.header_cart_items')
     </div>
     <!-- Mini Cart Widget /- -->
-
-
-
     <!-- Bottom-Header -->
     <div class="full-layer-bottom-header">
         <div class="container">
@@ -301,6 +297,11 @@ $sections = \App\Models\Section::sections();
                         <li>
                             <a href="{{ url('search-products?search=discounted') }}">Discounted 
                             <span class="superscript-label-discount">>10%</span>
+                            </a>
+                        </li>
+                         <li>
+                            <a href="{{ url('news/feed') }}">NewsFeed 
+                            <span class="superscript-label-new">>Style</span>
                             </a>
                         </li>
                         <li class="mega-position">

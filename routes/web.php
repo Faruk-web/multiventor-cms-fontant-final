@@ -170,18 +170,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
 });
 
-
-
-
-
-
 // User download order PDF invoice (We'll use the same viewPDFInvoice() function (but with different routes/URLs!) to render the PDF invoice for 'admin'-s in the Admin Panel and for the user to download it!) (we created this route outside outside the Admin Panel routes so that the user could use it!)
 Route::get('orders/invoice/download/{id}', 'App\Http\Controllers\Admin\OrderController@viewPDFInvoice');
-
-
-
-
-
 
 // Second: FRONT section routes:
 Route::namespace('App\Http\Controllers\Front')->group(function() {
@@ -321,3 +311,10 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     });
 
 });
+
+Route::get('news/feed', 'App\Http\Controllers\NewsFeetController@index');
+Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
+// Route::get('/posts/{id}', [PostController::class, 'show']);
+// Route::post('/posts/{id}/like', [PostController::class, 'like']);
+// Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
+// Route::post('/posts/{id}/view', [PostController::class, 'view']);
