@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class NewsFeed extends Model
 {
     use HasFactory;
+    protected $fillable = [
+            'name', 'product_name', 'vendor_id', 'review', 'tags', 'media_path'
+        ];
+
 }

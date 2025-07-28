@@ -149,43 +149,64 @@
 </style>
 
 <div class="product-review-form">
-  <h2>Post a Product Review</h2>
-  <form action="{{ route('review.store') }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px;" id="reviewForm">
+  <h2>Update Your Product Review</h2>
+
+  <form action="{{ route('newsfeed.update', $review->id) }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px;" id="reviewForm">
     @csrf
+    @method('PUT')
 
     {{-- User Name --}}
-    <input type="text" name="name" value="{{$userName}}" placeholder="Your Name" readonly />
+    <input type="text" name="name" value="{{ $review->name }}" readonly />
 
     {{-- Product Name --}}
-    <input type="text" name="product_name" placeholder="Product Name" required />
+    <input type="text" name="product_name" value="{{ $review->product_name }}" placeholder="Product Name" required />
 
     {{-- Shop Selection --}}
     <select name="vendor_id" required>
         <option value="">Select Shop</option>
         @foreach($shopname as $shop)
-            <option value="{{ $shop->vendor_id }}">{{ $shop->shop_name }}</option>
+            <option value="{{ $shop->vendor_id }}" {{ $review->vendor_id == $shop->vendor_id ? 'selected' : '' }}>
+                {{ $shop->shop_name }}
+            </option>
         @endforeach
     </select>
 
     {{-- Product Tags --}}
     <select id="productTags" name="tags[]" multiple>
         @foreach($products as $product)
-            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+            <option value="{{ $product->id }}" 
+              {{ in_array($product->id, json_decode($review->tags, true) ?? []) ? 'selected' : '' }}>
+              {{ $product->product_name }}
+            </option>
         @endforeach
     </select>
 
     {{-- Review Text --}}
-    <textarea name="review" placeholder="Write your review here..." required></textarea>
+    <textarea name="review" placeholder="Write your review here..." required>{{ $review->review }}</textarea>
+
+    {{-- Show Existing Media --}}
+    @if($review->media_path)
+      @php $ext = pathinfo($review->media_path, PATHINFO_EXTENSION); @endphp
+      <div style="margin-top:10px;">
+        @if(in_array($ext, ['jpg','jpeg','png','gif']))
+          <img src="{{ asset($review->media_path) }}" width="150">
+        @elseif(in_array($ext, ['mp4','mov','avi']))
+          <video width="200" controls>
+            <source src="{{ asset($review->media_path) }}" type="video/{{ $ext }}">
+          </video>
+        @endif
+      </div>
+    @endif
 
     {{-- File Upload --}}
-    <label for="mediaUpload">Upload Product Image or Video:</label>
+    <label for="mediaUpload">Change Image or Video:</label>
     <input type="file" name="media" id="mediaUpload" accept="image/*,video/*" />
 
     {{-- Submit --}}
-    <button type="submit">Post Review</button>
-</form>
-
+    <button type="submit">Update Review</button>
+  </form>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>

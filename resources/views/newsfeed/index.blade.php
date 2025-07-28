@@ -3,7 +3,31 @@
 @extends('front.layout.layout')
 @section('content')
   <style>
-  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+  }
+  .post-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .username {
+    font-weight: bold;
+  }
+  .header-actions a,
+  .header-actions button {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+  }
+  .header-actions i:hover {
+    color: #007bff;
+  }
 
     .post {
       background: #d7d7d770;
@@ -13,20 +37,6 @@
       margin-top: 40px;
       overflow: hidden;
       position: relative;
-    }
-    .post-header {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-    }
-    .post-header img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    .username {
-      font-weight: bold;
     }
     .post-img {
       width: 100%;
@@ -74,52 +84,72 @@
   </style>
 
 <div class="container">
+  @foreach($newsfeed as $item)
+    <div class="post" data-viewed="false">
+      
+      {{-- Header --}}
+      <<div class="post-header d-flex justify-between align-center">
+      <div class="d-flex align-center">
+        <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
+        <div class="username">{{ $item->name }}</div>
+      </div>
 
-  <div class="post" data-viewed="false">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
-      <div class="username">Alex Turner</div>
-    </div>
-    <div style="position:relative">
-      <img class="post-img" src="https://picsum.photos/id/1005/600/300" alt="post image">
-      <div class="overlay-buttons">
-        <button>🔖</button>
-        <button>⋯</button>
+      {{-- Right Side Buttons --}}
+      <div class="header-actions">
+        <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
+          <i class="fas fa-edit"></i>
+        </a>
+         <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+          @csrf
+          @method('DELETE')
+          <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </form>
       </div>
     </div>
-    <div class="post-content">
-      <p>Nature is not a place to visit. It is home. 🌳</p>
-    </div>
-    <div class="post-actions">
-       <div class="action-btn like-btn"><i class="ion ion-md-heart-empty"></i> <span class="like-count">0</span></div>
+
+
+      {{-- Media --}}
+      <div style="position:relative">
+        @php
+          $ext = pathinfo($item->media_path, PATHINFO_EXTENSION);
+        @endphp
+
+        @if(in_array($ext, ['jpg','jpeg','png','gif']))
+          <img class="post-img" src="{{ asset($item->media_path) }}" alt="post image">
+        @elseif(in_array($ext, ['mp4','mov','avi']))
+          <video class="post-img" controls>
+            <source src="{{ asset($item->media_path) }}" type="video/{{ $ext }}">
+          </video>
+        @endif
+
+        {{-- 🔁 Tag Loop Inside overlay-buttons --}}
+        <div class="overlay-buttons">
+          @foreach(json_decode($item->tags) as $tagId)
+            @if(isset($allProducts[$tagId]))
+              <button title="Tagged Product"><a class="item-img-wrapper-link" href="{{ url('product/' . $tagId) }}">{{ $allProducts[$tagId] }}</a></button>
+            @endif
+          @endforeach
+        </div>
+      </div>
+
+      {{-- Post Content --}}
+      <div class="post-content">
+        <p>{{ $item->review }}</p>
+      </div>
+
+      {{-- Post Actions --}}
+      <div class="post-actions">
+        <div class="action-btn like-btn"><i class="ion ion-md-heart-empty"></i> <span class="like-count">0</span></div>
         <div class="action-btn comment-btn"><i class="ion ion-md-chatbubbles"></i> <span class="comment-count">0</span></div>
         <div class="action-btn view-btn"><i class="ion ion-md-eye"></i> <span class="view-count">0</span></div>
         <div class="action-btn share-btn"><i class="ion ion-md-share"></i></div>
-    </div>
-  </div>
-<div class="post" data-viewed="false">
-    <div class="post-header">
-      <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
-      <div class="username">Alex Turner</div>
-    </div>
-    <div style="position:relative">
-      <img class="post-img" src="https://picsum.photos/id/1005/600/300" alt="post image">
-      <div class="overlay-buttons">
-        <button>🔖</button>
-        <button>⋯</button>
       </div>
     </div>
-    <div class="post-content">
-      <p>Nature is not a place to visit. It is home. 🌳</p>
-    </div>
-    <div class="post-actions">
-       <div class="action-btn like-btn"><i class="ion ion-md-heart-empty"></i> <span class="like-count">0</span></div>
-        <div class="action-btn comment-btn"><i class="ion ion-md-chatbubbles"></i> <span class="comment-count">0</span></div>
-        <div class="action-btn view-btn"><i class="ion ion-md-eye"></i> <span class="view-count">0</span></div>
-        <div class="action-btn share-btn"><i class="ion ion-md-share"></i></div>
-    </div>
-  </div>
+  @endforeach
 </div>
+
 
 <script>
   document.querySelectorAll('.like-btn').forEach(btn => {
