@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news_feeds', function (Blueprint $table) {
-             $table->id();
-            $table->string('name');
-            $table->string('product_name');
+        Schema::create('love', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('vendor_id');
-            $table->text('review');
-            $table->text('tags')->nullable(); // Stored as JSON
-            $table->string('media_path')->nullable();
+            $table->unsignedBigInteger('newsfeed_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('newsfeed_id')->references('id')->on('newsfeeds')->onDelete('cascade');
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news_feeds');
+        Schema::dropIfExists('love');
     }
 };

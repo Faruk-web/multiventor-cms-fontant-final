@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\NewsFeed;
 use App\Models\Product;
+use App\Models\Like;
+use App\Models\Love;
+use App\Models\Comment;
+
 use App\Models\VendorsBusinessDetail;
 use Illuminate\Support\Facades\Auth; 
 
@@ -14,19 +18,110 @@ class NewsFeetController extends Controller
     // Show newsfeed index
     public function index()
     {
-        $newsfeed = DB::table('news_feeds')->distinct()->get();
+        
+        // $newsfeed = DB::table('news_feeds')->distinct()->get();
+        $newsfeed = Newsfeed::with('likes','comments')->latest()->get();
         $allProducts = Product::pluck('product_name', 'id')->toArray();
-
         return view('newsfeed.index',compact('allProducts','newsfeed'));
     }
+
+    public function likeToggle($id)
+    {
+        $newsfeed = Newsfeed::findOrFail($id);
+        $user = auth()->user();
+
+        $like = $newsfeed->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            $like->delete();
+            return response()->json(['liked' => false]);
+        } else {
+            $newsfeed->likes()->create(['user_id' => $user->id]);
+            return response()->json(['liked' => true]);
+        }
+    }
+
+public function like($id)
+{
+    try {
+        $newsfeed = Newsfeed::findOrFail($id);
+        $user = auth()->user();
+        $userId = $user ? $user->id : null;
+
+        $like = Like::where('user_id', $userId)
+                    ->where('newsfeed_id', $newsfeed->id)
+                    ->first();
+
+        if ($like) {
+            $like->delete();
+            return response()->json(['liked' => false, 'like_count' => $newsfeed->likes()->count()]);
+        } else {
+            Like::create([
+                'user_id' => $userId,
+                'newsfeed_id' => $newsfeed->id,
+            ]);
+            return response()->json(['liked' => true, 'like_count' => $newsfeed->likes()->count()]);
+        }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+public function love($id)
+{
+    try {
+        $newsfeed = Newsfeed::findOrFail($id);
+        $user = auth()->user();
+        $userId = $user ? $user->id : null;
+
+        $love = Love::where('user_id', $userId)
+                    ->where('newsfeed_id', $newsfeed->id)
+                    ->first();
+
+        if ($love) {
+            $love->delete();
+            return response()->json(['loved' => false, 'love_count' => $newsfeed->loves()->count()]);
+        } else {
+            Love::create([
+                'user_id' => $userId,
+                'newsfeed_id' => $newsfeed->id,
+            ]);
+            return response()->json(['loved' => true, 'love_count' => $newsfeed->loves()->count()]);
+        }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+// comment section
+// app/Http/Controllers/CommentController.php
+
+public function commentstore(Request $request)
+{
+    $request->validate([
+        'newsfeed_id' => 'required|exists:news_feeds,id',
+        'comment' => 'required|string|max:1000',
+    ]);
+
+    Comment::create([
+        'newsfeed_id' => $request->newsfeed_id,
+        'user_id' => auth()->id(),
+        'comment' => $request->comment,
+        'parent_id' => $request->parent_id, // null or parent comment id
+    ]);
+
+    return back()->with('success', 'Comment posted!');
+}
+
+
 
     // Show create post form with product names as tags
     public function create()
     {
          $userName = Auth::user()->name;
+         $userid = Auth::user()->id;
         $products = DB::table('products')->select('product_name','id')->distinct()->get();
         $shopname = DB::table('vendors_business_details')->select('shop_name','vendor_id')->distinct()->get();
-        return view('newsfeed.create', compact('products','shopname','userName'));
+        return view('newsfeed.create', compact('products','shopname','userName','userid'));
     }
     
 
@@ -69,6 +164,7 @@ public function store(Request $request)
     NewsFeed::create([
         'name' => $request->name,
         'product_name' => $request->product_name,
+        'user_id' => $request->user_id,
         'vendor_id' => $request->vendor_id,
         'tags' => json_encode($request->tags),
         'review' => $request->review,
@@ -113,6 +209,7 @@ public function store(Request $request)
 
     $review->update([
         'product_name' => $request->product_name,
+        'user_id' => $request->user_id,
         'vendor_id' => $request->vendor_id,
         'tags' => json_encode($request->tags),
         'review' => $request->review,

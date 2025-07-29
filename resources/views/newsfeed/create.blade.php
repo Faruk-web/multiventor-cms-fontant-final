@@ -152,7 +152,7 @@
   <h2>Post a Product Review</h2>
   <form action="{{ route('review.store') }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px;" id="reviewForm">
     @csrf
-
+    <input type="hidden" name="user_id" value="{{$userid}}" placeholder="Your ID" readonly />
     {{-- User Name --}}
     <input type="text" name="name" value="{{$userName}}" placeholder="Your Name" readonly />
 

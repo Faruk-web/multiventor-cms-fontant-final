@@ -322,3 +322,13 @@ Route::delete('newsfeed/{id}', 'App\Http\Controllers\NewsFeetController@destroy'
 // Route::post('/posts/{id}/like', [PostController::class, 'like']);
 // Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
 // Route::post('/posts/{id}/view', [PostController::class, 'view']);
+// Route::get('/newsfeed', [NewsfeedController::class, 'index'])->name('newsfeed.index');
+Route::post('/newsfeed/like/{id}', 'App\Http\Controllers\NewsFeetController@likeToggle')->middleware('auth');
+Route::post('/newsfeed/{id}/like', 'App\Http\Controllers\NewsFeetController@like')->name('newsfeed.like');
+// love
+Route::post('/newsfeed/{id}/love', 'App\Http\Controllers\NewsFeetController@love')->name('newsfeed.love');
+
+// comment
+Route::post('/comments', 'App\Http\Controllers\NewsFeetController@commentstore')->name('comments.store');
+
+

@@ -95,18 +95,20 @@
       </div>
 
       {{-- Right Side Buttons --}}
-      <div class="header-actions">
-        <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
-          <i class="fas fa-edit"></i>
-        </a>
-         <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
-          @csrf
-          @method('DELETE')
-          <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </form>
-      </div>
+      @if(auth()->id() === $item->user_id)
+        <div class="header-actions">
+          <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
+            <i class="fas fa-edit"></i>
+          </a>
+          <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </form>
+        </div>
+      @endif
     </div>
 
 
@@ -133,71 +135,157 @@
           @endforeach
         </div>
       </div>
-
       {{-- Post Content --}}
-      <div class="post-content">
-        <p>{{ $item->review }}</p>
-      </div>
-
-      {{-- Post Actions --}}
       <div class="post-actions">
-        <div class="action-btn like-btn"><i class="ion ion-md-heart-empty"></i> <span class="like-count">0</span></div>
-        <div class="action-btn comment-btn"><i class="ion ion-md-chatbubbles"></i> <span class="comment-count">0</span></div>
-        <div class="action-btn view-btn"><i class="ion ion-md-eye"></i> <span class="view-count">0</span></div>
+        <p>{{ $item->review }}</p>
+
+          
+      </div>
+      <div class="post-actions">
+          <button class="like-btn" data-id="{{ $item->id }}">
+              <i class="{{ $item->isLikedBy(auth()->id()) ? 'fas fa-thumbs-up text-primary' : 'far fa-thumbs-up' }}"></i>
+              <span class="like-count">{{ $item->likes->count() }}</span>
+          </button>
+          <button class="love-btn" data-id="{{ $item->id }}">
+            <i class="{{ $item->isLovedBy(auth()->id()) ? 'fas fa-heart text-danger' : 'far fa-heart' }}"></i>
+            <span class="love-count">{{ $item->loves->count() }}</span>
+        </button>
+<!-- comment secttion -->
+
+{{-- Show Comments --}}
+<div class="comments-section">
+  @if($item->comments && count($item->comments))
+    @foreach($item->comments as $comment)
+      <div class="comment">
+        <strong>{{ optional($comment->user)->name ?? 'Unknown User' }}:</strong> {{ $comment->comment }}
+        
+        {{-- Admin Reply Button --}}
+        @if(auth()->check() && auth()->user()->is_admin)
+          <form action="{{ route('comments.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
+            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+            <textarea name="comment" placeholder="Reply to this comment..." required></textarea>
+            <button type="submit">Reply</button>
+          </form>
+        @endif
+
+        {{-- Replies --}}
+        @if($comment->replies && count($comment->replies))
+          @foreach($comment->replies as $reply)
+            <div class="reply" style="margin-left: 20px;">
+              <strong>{{ optional($reply->user)->name ?? 'Unknown User' }} (Reply):</strong> {{ $reply->comment }}
+            </div>
+          @endforeach
+        @endif
+      </div>
+    @endforeach
+  @else
+    <p>No comments yet.</p>
+  @endif
+</div>
+
+{{-- New Comment Form --}}
+@if(auth()->check())
+  <form action="{{ route('comments.store') }}" method="POST">
+    @csrf
+    <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
+    <textarea name="comment" placeholder="Write a comment..." required></textarea>
+    <button type="submit">Post Comment</button>
+  </form>
+@endif
+
+
+<script>
+    function toggleReplyForm(commentId) {
+        const form = document.getElementById('reply-form-' + commentId);
+        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
+
+
+
+
+        <!-- <div class="action-btn comment-btn"><i class="ion ion-md-chatbubbles"></i> <span class="comment-count">0</span></div> -->
+        <!-- <div class="action-btn view-btn"><i class="ion ion-md-eye"></i> <span class="view-count">0</span></div> -->
         <div class="action-btn share-btn"><i class="ion ion-md-share"></i></div>
       </div>
     </div>
   @endforeach
 </div>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  document.querySelectorAll('.like-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const countSpan = this.querySelector('.like-count');
-      let count = parseInt(countSpan.innerText);
-      if (this.classList.contains('liked')) {
-        this.classList.remove('liked');
-        count--;
-      } else {
-        this.classList.add('liked');
-        count++;
-      }
-      countSpan.innerText = count;
+$(document).ready(function() {
+    // CSRF token setup
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
     });
-  });
 
-  document.querySelectorAll('.comment-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const countSpan = this.querySelector('.comment-count');
-      let count = parseInt(countSpan.innerText);
-      count++;
-      countSpan.innerText = count;
-    });
-  });
+    // যখন ইউজার like button এ ক্লিক করবে তখন AJAX call হবে
+    $('.like-btn').click(function() {
+        var button = $(this);
+        var newsfeedId = button.data('id');  // button থেকে newsfeed id নিন
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.target.dataset.viewed === "false") {
-        const viewSpan = entry.target.querySelector('.view-count');
-        let count = parseInt(viewSpan.innerText);
-        viewSpan.innerText = count + 1;
-        entry.target.dataset.viewed = "true";
-      }
+        $.ajax({
+            url: '/newsfeed/' + newsfeedId + '/like',
+            method: 'POST',
+            success: function(response) {
+                if (response.liked) {
+                    button.find('i').removeClass('fa-heart-o').addClass('fa-heart');
+                } else {
+                    button.find('i').removeClass('fa-heart').addClass('fa-heart-o');
+                }
+                button.find('.like-count').text(response.like_count);
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+                console.error('Response:', xhr.responseText);
+                alert('Like করতে সমস্যা হচ্ছে। Console error দেখুন।');
+            }
+        });
     });
-  }, { threshold: 0.5 });
-
-  document.querySelectorAll('.post').forEach(post => {
-    observer.observe(post);
-  });
-  document.querySelectorAll('.share-btn').forEach(btn => {
-  btn.addEventListener('click', function () {
-    const shareUrl = window.location.href;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      alert("Post link copied to clipboard!");
-    });
-  });
 });
 
+/// love
+$('.love-btn').click(function () {
+    var button = $(this);
+    var newsfeedId = button.data('id');
+    var icon = button.find('i');
+
+    $.ajax({
+        url: '/newsfeed/' + newsfeedId + '/love',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}'
+        },
+        success: function (response) {
+            // Icon toggle logic
+            if (response.loved) {
+                  icon.removeClass('far fa-heart').addClass('fas fa-heart text-danger');
+              } else {
+                  icon.removeClass('fas fa-heart text-danger').addClass('far fa-heart');
+              }
+
+            // Count update
+            button.find('.love-count').text(response.love_count);
+        },
+        error: function (xhr) {
+            console.log(xhr.responseText);
+        }
+    });
+});
+
+
+
+
+
 </script>
+
+
+
 @endsection

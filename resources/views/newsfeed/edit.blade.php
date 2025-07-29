@@ -154,7 +154,7 @@
   <form action="{{ route('newsfeed.update', $review->id) }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px;" id="reviewForm">
     @csrf
     @method('PUT')
-
+     <input type="hidden" name="user_id" value="{{ $review->user_id }}" readonly />
     {{-- User Name --}}
     <input type="text" name="name" value="{{ $review->name }}" readonly />
 

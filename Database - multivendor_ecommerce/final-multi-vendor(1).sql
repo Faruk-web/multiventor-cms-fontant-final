@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2025 at 08:40 AM
+-- Generation Time: Jul 29, 2025 at 01:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -504,6 +504,31 @@ INSERT INTO `cod_pincodes` (`id`, `pincode`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `newsfeed_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `newsfeed_id`, `user_id`, `parent_id`, `comment`, `created_at`, `updated_at`) VALUES
+(1, 3, 2, NULL, 'sdfdf', '2025-07-29 05:33:58', '2025-07-29 05:33:58'),
+(2, 3, 2, NULL, 'hi', '2025-07-29 05:38:27', '2025-07-29 05:38:27'),
+(3, 3, 2, NULL, 'hi....', '2025-07-29 05:50:07', '2025-07-29 05:50:07');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `countries`
 --
 
@@ -854,6 +879,50 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `likes`
+--
+
+CREATE TABLE `likes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `newsfeed_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`id`, `user_id`, `newsfeed_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, '2025-07-29 02:29:16', '2025-07-29 02:29:16'),
+(24, 2, 3, '2025-07-29 05:50:48', '2025-07-29 05:50:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `love`
+--
+
+CREATE TABLE `love` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `newsfeed_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `love`
+--
+
+INSERT INTO `love` (`id`, `user_id`, `newsfeed_id`, `created_at`, `updated_at`) VALUES
+(37, NULL, 3, '2025-07-29 04:47:38', '2025-07-29 04:47:38'),
+(40, 2, 3, '2025-07-29 05:50:50', '2025-07-29 05:50:50');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -918,7 +987,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (49, '2023_04_23_225334_add_access_token_column_to_users_table', 38),
 (50, '2023_05_26_233039_create_newsletter_subscribers_table', 38),
 (51, '2023_07_05_112943_create_ratings_table', 39),
-(52, '2025_07_28_035812_create_news_feeds_table', 40);
+(52, '2025_07_28_035812_create_news_feeds_table', 40),
+(53, '2025_07_29_072803_create_likes_table', 41);
 
 -- --------------------------------------------------------
 
@@ -953,6 +1023,7 @@ CREATE TABLE `news_feeds` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `product_name` varchar(255) NOT NULL,
+  `user_id` bigint(10) UNSIGNED NOT NULL,
   `vendor_id` bigint(20) UNSIGNED NOT NULL,
   `review` text NOT NULL,
   `tags` text DEFAULT NULL,
@@ -965,8 +1036,8 @@ CREATE TABLE `news_feeds` (
 -- Dumping data for table `news_feeds`
 --
 
-INSERT INTO `news_feeds` (`id`, `name`, `product_name`, `vendor_id`, `review`, `tags`, `media_path`, `created_at`, `updated_at`) VALUES
-(3, 'Ariful Islam omar', 'shart-blue', 1, 'dgfdsgg dfdsggd', '[\"1\",\"3\",\"6\",\"9\"]', 'uploads/reviews/68870592a9fcd.jpg', '2025-07-27 23:07:30', '2025-07-28 00:23:23');
+INSERT INTO `news_feeds` (`id`, `name`, `product_name`, `user_id`, `vendor_id`, `review`, `tags`, `media_path`, `created_at`, `updated_at`) VALUES
+(3, 'Ariful Islam omar', 'shart-blue', 2, 1, 'dgfdsgg dfdsggd', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/68870592a9fcd.jpg', '2025-07-27 23:07:30', '2025-07-28 22:51:47');
 
 -- --------------------------------------------------------
 
@@ -2414,6 +2485,7 @@ INSERT INTO `shipping_charges` (`id`, `country`, `0_500g`, `501g_1000g`, `1001_2
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `is_admin` tinyint(1) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
@@ -2435,17 +2507,17 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `address`, `city`, `state`, `country`, `pincode`, `mobile`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `access_token`, `created_at`, `updated_at`) VALUES
-(1, 'Ramy Morsy', NULL, NULL, NULL, NULL, NULL, '9650000000', 'ramy@yopmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-09 21:24:54', '2022-11-09 21:24:54'),
-(2, 'Ibrahim Mohamed', '16 El Fath St.', 'Cairo', 'Great Cairo', 'Egypt', '141001', '01195786255', 'customer@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 21:52:20', '2022-11-28 13:57:55'),
-(3, 'Fouad Yasser', NULL, NULL, NULL, NULL, NULL, '01254873526', 'fouad@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 23:28:20', '2022-11-10 23:28:20'),
-(4, 'Adel Ramez', NULL, NULL, NULL, NULL, NULL, '01052347854', 'adel@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:10:24', '2023-01-06 21:52:09'),
-(5, 'Fayez Fathy', NULL, NULL, NULL, NULL, NULL, '01152006900', 'fayez@yahoo.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:11:46', '2022-11-14 18:11:46'),
-(6, 'Mahmoud Samy', NULL, NULL, NULL, NULL, NULL, '01151548874', 'mahmoud@yahoo.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-15 21:05:45', '2023-08-07 17:45:48'),
-(7, 'Nermin Yasser', NULL, NULL, NULL, NULL, NULL, '01050049566', 'nermin@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNmQwY2U3NTVjODBhZDM4NjIyY2FlOTM4YWI5YjIxZTQyYjU3NzkwYzA1ODFlMjJkNmI4NjBmYWZiZjVjYTJjZGNiMWMyZmZiZWRkZDJlM2IiLCJpYXQiOjE2ODI5MDg0MjIuNDA4MTExLCJuYmYiOjE2ODI5MDg0MjIuNDA4MTE1LCJleHAiOjE3MTQ1MzA4MjIuMTYxMTExLCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.JZSCQ0RtYOiQgutK4fD_oKKl6E6yyxQRioCRKxpOIwdN6byh0aos0MaYYQJ5uYHanon_NycnHxFobCRNbUuuoWsilmLwWYq3d0O-JLHamueZDBQdMWSe7-2pouHGKZ4Eg0tu669ASEJf-FVcIGVeWLDoyzIMJAgQARoV1rHtf_XHSBQjWiDZWP1aRTUoMizGdYNOldLYYNBVzCLkF_9-ZYUtMuZsYScncbW8MSuBGi_w4mMV9A_c6AYWw_KFMEsl55cD1SM8jupE05RDBeaUuVFIvJiz0XL1psQlVmoyv_LQj0FXM77y-Ot2QNpXsSQh_kztFDb5t-ttDaY7yXOCN2OSql_hAX_yomxbFzRVGm8Qs6l-vNVK4qT2bFK4lc5G2v8rWGM7A1JSqFAeByRe9dWF6Q-MBwz2JY-0OXNenmQ3SrLp59fc9DSKppSh6oSNzVHQx9uD0Fum5g9YFllpCRuGxd_c9AXoPHz6x9_EKIjLhtsywvEfVBhMu4hE9m4BWMtF9LqJzU-ogpme9rLouvqHzZTEjAtbPjbCLPZ8-BI7cNPy-Bozprl4mnzLCaSoE4Lb9Yvid3zzxBniNswchypqBBGIALlR84IHmRg_QCc7TYDlXLGzV63KCP29XOQZK29vHP7XalLRpnrVkYmVHhZip7QsexkcOKgkvJchN8k', '2022-11-17 22:55:47', '2023-04-30 23:33:42'),
-(30, 'Raouf', NULL, NULL, NULL, NULL, NULL, NULL, 'raouf@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, 'DUCpVtiKrL2j2Mr9FPfWdXwY9N74CRjUgBRTRIX1rEqnCMUVZQygaHyRLOoz', '2023-04-23 22:16:37', '2023-04-23 22:16:37'),
-(34, 'Farag', NULL, NULL, NULL, NULL, NULL, NULL, 'farag@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZmQ4YjVlZWE5MDg4ZjE1MmUwNzQ1YmJhNjJmYzE2NWQ3YjUzMTM5YjM3ZTAwZDQwYjEyMzU0NDI5NTYyZmNjMjFlZWZkMjlkYmRlODFjNDMiLCJpYXQiOjE2ODI5MDU2OTEuMDEyMjI2LCJuYmYiOjE2ODI5MDU2OTEuMDEyMjI5LCJleHAiOjE3MTQ1MjgwOTAuNzU3ODAyLCJzdWIiOiIzNCIsInNjb3BlcyI6W119.HWzoeLfegHgLJE_bxRgsQfvT-V-2SZNR-k5_Z9NV1cIEFPxcSziCYUlHFGh38JjDWGKQy2cQEVym4jtBNJo_OFj31OVBNmZfj6P7odQve-R-NRiDxBBoX43RNlh5bAVkw2UPMZZ9B8wLcsFjxBxfJMg5M1zU1X05OuQnp4x9tgQJJzlCV9l1XIRmthhmT7_mKeirOVW_j9cCeQY9HZyiZbzU_1hWltourDqVmWiQhAkdA4Im7JF4pD98jgfu_vBntdr-7KZZhkXDgF1YqelTpuzCP8bqPyqMry6GLLZYMAtrmo_iiN3I50GVE_MKw9mEy26o5y4dkLdkNHbHy5JFdxS2iVyc3MDj2LyxCUciyqheEDaavTPq48toBBexg2kv9EFvtnvzC9b68InwN1mM0U9xbPCne4-6gZb5WLKnu1ybj2ljNuW0StEWZqqWgohaOsKYb0-6u5l7-sJKH-EMsZhtnwml5sxlsfs5ZSpVpGqgJFN3NHow2IZ5sNn44Ig_2wALVaBHxeHKzSnK7jhFuWc-Ew_26gpQdbyqhHGNq5Rq_UOngqEPwdH0KgP4triZxsnehhMwJZrTMEefeBOfdc-x207iIQ_wN6cnsi5dG_FRu6Om9BCjjoohKkxbUhIOARBWHSZGCb3QHvB1sOCAlhxxAXwYBDLhyVMU438amQQ', '2023-04-30 22:48:10', '2023-04-30 22:48:11'),
-(35, 'Smith Mark', NULL, NULL, NULL, NULL, NULL, '01175799544', 'smith@smith.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2024-08-03 22:16:38', '2024-08-03 22:16:38');
+INSERT INTO `users` (`id`, `is_admin`, `name`, `address`, `city`, `state`, `country`, `pincode`, `mobile`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `access_token`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'Ramy Morsy', NULL, NULL, NULL, NULL, NULL, '9650000000', 'ramy@yopmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-09 21:24:54', '2022-11-09 21:24:54'),
+(2, NULL, 'Ibrahim Mohamed', '16 El Fath St.', 'Cairo', 'Great Cairo', 'Egypt', '141001', '01195786255', 'customer@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 21:52:20', '2022-11-28 13:57:55'),
+(3, NULL, 'Fouad Yasser', NULL, NULL, NULL, NULL, NULL, '01254873526', 'fouad@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 23:28:20', '2022-11-10 23:28:20'),
+(4, NULL, 'Adel Ramez', NULL, NULL, NULL, NULL, NULL, '01052347854', 'adel@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:10:24', '2023-01-06 21:52:09'),
+(5, NULL, 'Fayez Fathy', NULL, NULL, NULL, NULL, NULL, '01152006900', 'fayez@yahoo.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:11:46', '2022-11-14 18:11:46'),
+(6, NULL, 'Mahmoud Samy', NULL, NULL, NULL, NULL, NULL, '01151548874', 'mahmoud@yahoo.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-15 21:05:45', '2023-08-07 17:45:48'),
+(7, NULL, 'Nermin Yasser', NULL, NULL, NULL, NULL, NULL, '01050049566', 'nermin@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNmQwY2U3NTVjODBhZDM4NjIyY2FlOTM4YWI5YjIxZTQyYjU3NzkwYzA1ODFlMjJkNmI4NjBmYWZiZjVjYTJjZGNiMWMyZmZiZWRkZDJlM2IiLCJpYXQiOjE2ODI5MDg0MjIuNDA4MTExLCJuYmYiOjE2ODI5MDg0MjIuNDA4MTE1LCJleHAiOjE3MTQ1MzA4MjIuMTYxMTExLCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.JZSCQ0RtYOiQgutK4fD_oKKl6E6yyxQRioCRKxpOIwdN6byh0aos0MaYYQJ5uYHanon_NycnHxFobCRNbUuuoWsilmLwWYq3d0O-JLHamueZDBQdMWSe7-2pouHGKZ4Eg0tu669ASEJf-FVcIGVeWLDoyzIMJAgQARoV1rHtf_XHSBQjWiDZWP1aRTUoMizGdYNOldLYYNBVzCLkF_9-ZYUtMuZsYScncbW8MSuBGi_w4mMV9A_c6AYWw_KFMEsl55cD1SM8jupE05RDBeaUuVFIvJiz0XL1psQlVmoyv_LQj0FXM77y-Ot2QNpXsSQh_kztFDb5t-ttDaY7yXOCN2OSql_hAX_yomxbFzRVGm8Qs6l-vNVK4qT2bFK4lc5G2v8rWGM7A1JSqFAeByRe9dWF6Q-MBwz2JY-0OXNenmQ3SrLp59fc9DSKppSh6oSNzVHQx9uD0Fum5g9YFllpCRuGxd_c9AXoPHz6x9_EKIjLhtsywvEfVBhMu4hE9m4BWMtF9LqJzU-ogpme9rLouvqHzZTEjAtbPjbCLPZ8-BI7cNPy-Bozprl4mnzLCaSoE4Lb9Yvid3zzxBniNswchypqBBGIALlR84IHmRg_QCc7TYDlXLGzV63KCP29XOQZK29vHP7XalLRpnrVkYmVHhZip7QsexkcOKgkvJchN8k', '2022-11-17 22:55:47', '2023-04-30 23:33:42'),
+(30, NULL, 'Raouf', NULL, NULL, NULL, NULL, NULL, NULL, 'raouf@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, 'DUCpVtiKrL2j2Mr9FPfWdXwY9N74CRjUgBRTRIX1rEqnCMUVZQygaHyRLOoz', '2023-04-23 22:16:37', '2023-04-23 22:16:37'),
+(34, NULL, 'Farag', NULL, NULL, NULL, NULL, NULL, NULL, 'farag@hotmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZmQ4YjVlZWE5MDg4ZjE1MmUwNzQ1YmJhNjJmYzE2NWQ3YjUzMTM5YjM3ZTAwZDQwYjEyMzU0NDI5NTYyZmNjMjFlZWZkMjlkYmRlODFjNDMiLCJpYXQiOjE2ODI5MDU2OTEuMDEyMjI2LCJuYmYiOjE2ODI5MDU2OTEuMDEyMjI5LCJleHAiOjE3MTQ1MjgwOTAuNzU3ODAyLCJzdWIiOiIzNCIsInNjb3BlcyI6W119.HWzoeLfegHgLJE_bxRgsQfvT-V-2SZNR-k5_Z9NV1cIEFPxcSziCYUlHFGh38JjDWGKQy2cQEVym4jtBNJo_OFj31OVBNmZfj6P7odQve-R-NRiDxBBoX43RNlh5bAVkw2UPMZZ9B8wLcsFjxBxfJMg5M1zU1X05OuQnp4x9tgQJJzlCV9l1XIRmthhmT7_mKeirOVW_j9cCeQY9HZyiZbzU_1hWltourDqVmWiQhAkdA4Im7JF4pD98jgfu_vBntdr-7KZZhkXDgF1YqelTpuzCP8bqPyqMry6GLLZYMAtrmo_iiN3I50GVE_MKw9mEy26o5y4dkLdkNHbHy5JFdxS2iVyc3MDj2LyxCUciyqheEDaavTPq48toBBexg2kv9EFvtnvzC9b68InwN1mM0U9xbPCne4-6gZb5WLKnu1ybj2ljNuW0StEWZqqWgohaOsKYb0-6u5l7-sJKH-EMsZhtnwml5sxlsfs5ZSpVpGqgJFN3NHow2IZ5sNn44Ig_2wALVaBHxeHKzSnK7jhFuWc-Ew_26gpQdbyqhHGNq5Rq_UOngqEPwdH0KgP4triZxsnehhMwJZrTMEefeBOfdc-x207iIQ_wN6cnsi5dG_FRu6Om9BCjjoohKkxbUhIOARBWHSZGCb3QHvB1sOCAlhxxAXwYBDLhyVMU438amQQ', '2023-04-30 22:48:10', '2023-04-30 22:48:11'),
+(35, NULL, 'Smith Mark', NULL, NULL, NULL, NULL, NULL, '01175799544', 'smith@smith.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2024-08-03 22:16:38', '2024-08-03 22:16:38');
 
 -- --------------------------------------------------------
 
@@ -2584,6 +2656,12 @@ ALTER TABLE `cod_pincodes`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `countries`
 --
 ALTER TABLE `countries`
@@ -2607,6 +2685,21 @@ ALTER TABLE `delivery_addresses`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `likes_user_id_newsfeed_id_unique` (`user_id`,`newsfeed_id`),
+  ADD KEY `likes_newsfeed_id_foreign` (`newsfeed_id`);
+
+--
+-- Indexes for table `love`
+--
+ALTER TABLE `love`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `love_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `migrations`
@@ -2837,6 +2930,12 @@ ALTER TABLE `cod_pincodes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `countries`
 --
 ALTER TABLE `countries`
@@ -2861,10 +2960,22 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `love`
+--
+ALTER TABLE `love`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `newsletter_subscribers`
@@ -2901,6 +3012,23 @@ ALTER TABLE `recently_viewed_products`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `likes`
+--
+ALTER TABLE `likes`
+  ADD CONSTRAINT `likes_newsfeed_id_foreign` FOREIGN KEY (`newsfeed_id`) REFERENCES `news_feeds` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `likes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `love`
+--
+ALTER TABLE `love`
+  ADD CONSTRAINT `love_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
