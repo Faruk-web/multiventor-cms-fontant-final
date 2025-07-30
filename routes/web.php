@@ -329,6 +329,14 @@ Route::post('/newsfeed/{id}/like', 'App\Http\Controllers\NewsFeetController@like
 Route::post('/newsfeed/{id}/love', 'App\Http\Controllers\NewsFeetController@love')->name('newsfeed.love');
 
 // comment
-Route::post('/comments', 'App\Http\Controllers\NewsFeetController@commentstore')->name('comments.store');
+
+Route::post('/comment', 'App\Http\Controllers\NewsFeetController@commentstore')->name('comment.store');
+
+// Only users can reply
+Route::post('/comment/reply', 'App\Http\Controllers\NewsFeetController@reply')
+    ->middleware('customer.only')
+    ->name('comment.reply');
+Route::delete('/comment/{id}', 'App\Http\Controllers\NewsFeetController@commentdestroy')->name('comment.destroy')->middleware('auth');
+
 
 

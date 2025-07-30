@@ -174,7 +174,7 @@
         <!-- Main -->
         <script type="text/javascript" src="{{ url('front/js/app.js') }}"></script>
 
-
+        @yield('scripts')
 
         <!-- Our front/js/custom.js file --> 
         <script type="text/javascript" src="{{ url('front/js/custom.js') }}"></script>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2025 at 01:51 PM
+-- Generation Time: Jul 30, 2025 at 11:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -522,9 +522,13 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `newsfeed_id`, `user_id`, `parent_id`, `comment`, `created_at`, `updated_at`) VALUES
-(1, 3, 2, NULL, 'sdfdf', '2025-07-29 05:33:58', '2025-07-29 05:33:58'),
 (2, 3, 2, NULL, 'hi', '2025-07-29 05:38:27', '2025-07-29 05:38:27'),
-(3, 3, 2, NULL, 'hi....', '2025-07-29 05:50:07', '2025-07-29 05:50:07');
+(3, 3, 2, NULL, 'hi....', '2025-07-29 05:50:07', '2025-07-29 05:50:07'),
+(4, 3, 2, 3, 'jii', '2025-07-30 00:43:23', '2025-07-30 00:43:23'),
+(5, 3, 2, 2, 'bhai kemon aso', '2025-07-30 00:44:41', '2025-07-30 00:44:41'),
+(6, 3, 1, 1, 'ok bhai', '2025-07-30 00:49:35', '2025-07-30 00:49:35'),
+(7, 3, NULL, NULL, 'bhai shart ta onke sundor', '2025-07-30 00:54:47', '2025-07-30 00:54:47'),
+(8, 3, 1, 7, 'thanks', '2025-07-30 01:05:15', '2025-07-30 01:05:15');
 
 -- --------------------------------------------------------
 
@@ -895,8 +899,8 @@ CREATE TABLE `likes` (
 --
 
 INSERT INTO `likes` (`id`, `user_id`, `newsfeed_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 3, '2025-07-29 02:29:16', '2025-07-29 02:29:16'),
-(24, 2, 3, '2025-07-29 05:50:48', '2025-07-29 05:50:48');
+(24, 2, 3, '2025-07-29 05:50:48', '2025-07-29 05:50:48'),
+(25, 1, 3, '2025-07-30 02:14:00', '2025-07-30 02:14:00');
 
 -- --------------------------------------------------------
 
@@ -918,7 +922,8 @@ CREATE TABLE `love` (
 
 INSERT INTO `love` (`id`, `user_id`, `newsfeed_id`, `created_at`, `updated_at`) VALUES
 (37, NULL, 3, '2025-07-29 04:47:38', '2025-07-29 04:47:38'),
-(40, 2, 3, '2025-07-29 05:50:50', '2025-07-29 05:50:50');
+(40, 2, 3, '2025-07-29 05:50:50', '2025-07-29 05:50:50'),
+(42, 1, 3, '2025-07-30 02:15:48', '2025-07-30 02:15:48');
 
 -- --------------------------------------------------------
 
@@ -2933,7 +2938,7 @@ ALTER TABLE `cod_pincodes`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -2963,13 +2968,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `love`
 --
 ALTER TABLE `love`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `migrations`

@@ -20,7 +20,7 @@ class NewsFeetController extends Controller
     {
         
         // $newsfeed = DB::table('news_feeds')->distinct()->get();
-        $newsfeed = Newsfeed::with('likes','comments')->latest()->get();
+        $newsfeed = Newsfeed::with('likes','comments.user')->latest()->get();
         $allProducts = Product::pluck('product_name', 'id')->toArray();
         return view('newsfeed.index',compact('allProducts','newsfeed'));
     }
@@ -97,19 +97,49 @@ public function love($id)
 
 public function commentstore(Request $request)
 {
-    $request->validate([
-        'newsfeed_id' => 'required|exists:news_feeds,id',
-        'comment' => 'required|string|max:1000',
+   $request->validate([
+        'newsfeed_id' => 'required',
+        'comment' => 'required|string',
     ]);
 
     Comment::create([
         'newsfeed_id' => $request->newsfeed_id,
-        'user_id' => auth()->id(),
+        'user_id' => auth()->id(), // Only users login allowed
         'comment' => $request->comment,
-        'parent_id' => $request->parent_id, // null or parent comment id
     ]);
 
     return back()->with('success', 'Comment posted!');
+}
+public function reply(Request $request)
+{
+    // dd($request);
+    $request->validate([
+        'newsfeed_id' => 'required',
+        'parent_id' => 'required',
+        'comment' => 'required|string',
+    ]);
+
+    Comment::create([
+        'newsfeed_id' => $request->newsfeed_id,
+        'parent_id' => $request->parent_id,
+        'user_id' => auth()->id(), // Must be from 'users' table
+        'comment' => $request->comment,
+    ]);
+
+    return back();
+}
+public function commentdestroy($id)
+{
+    $comment = Comment::findOrFail($id);
+
+    // Check: only the owner can delete
+    if (auth()->id() !== $comment->user_id) {
+        abort(403, 'Unauthorized');
+    }
+
+    $comment->delete();
+
+    return back()->with('success', 'Comment deleted successfully');
 }
 
 

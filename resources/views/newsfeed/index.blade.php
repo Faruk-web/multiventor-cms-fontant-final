@@ -80,6 +80,26 @@
     .post-actions i {
     font-size: 30px;
     }
+    .item-img-wrapper-link:before{
+      background-color: none;
+    }
+/* ========== comment repply css======================= */
+.newsfeed-box {
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+.comment-section {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+.comment-box, .reply-box {
+    background: #f1f1f1;
+    border-radius: 5px;
+    padding: 6px 10px;
+    margin-top: 5px;
+}
 
   </style>
 
@@ -88,7 +108,7 @@
     <div class="post" data-viewed="false">
       
       {{-- Header --}}
-      <<div class="post-header d-flex justify-between align-center">
+      <div class="post-header d-flex justify-between align-center">
       <div class="d-flex align-center">
         <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
         <div class="username">{{ $item->name }}</div>
@@ -142,75 +162,88 @@
           
       </div>
       <div class="post-actions">
-          <button class="like-btn" data-id="{{ $item->id }}">
+          <div class="like-btn" data-id="{{ $item->id }}">
               <i class="{{ $item->isLikedBy(auth()->id()) ? 'fas fa-thumbs-up text-primary' : 'far fa-thumbs-up' }}"></i>
               <span class="like-count">{{ $item->likes->count() }}</span>
-          </button>
-          <button class="love-btn" data-id="{{ $item->id }}">
+          </div>
+          <div class="love-btn" data-id="{{ $item->id }}">
             <i class="{{ $item->isLovedBy(auth()->id()) ? 'fas fa-heart text-danger' : 'far fa-heart' }}"></i>
             <span class="love-count">{{ $item->loves->count() }}</span>
-        </button>
-<!-- comment secttion -->
-
-{{-- Show Comments --}}
-<div class="comments-section">
-  @if($item->comments && count($item->comments))
-    @foreach($item->comments as $comment)
-      <div class="comment">
-        <strong>{{ optional($comment->user)->name ?? 'Unknown User' }}:</strong> {{ $comment->comment }}
-        
-        {{-- Admin Reply Button --}}
-        @if(auth()->check() && auth()->user()->is_admin)
-          <form action="{{ route('comments.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
-            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-            <textarea name="comment" placeholder="Reply to this comment..." required></textarea>
-            <button type="submit">Reply</button>
-          </form>
-        @endif
-
-        {{-- Replies --}}
-        @if($comment->replies && count($comment->replies))
-          @foreach($comment->replies as $reply)
-            <div class="reply" style="margin-left: 20px;">
-              <strong>{{ optional($reply->user)->name ?? 'Unknown User' }} (Reply):</strong> {{ $reply->comment }}
-            </div>
-          @endforeach
-        @endif
-      </div>
-    @endforeach
-  @else
-    <p>No comments yet.</p>
-  @endif
-</div>
-
-{{-- New Comment Form --}}
-@if(auth()->check())
-  <form action="{{ route('comments.store') }}" method="POST">
-    @csrf
-    <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
-    <textarea name="comment" placeholder="Write a comment..." required></textarea>
-    <button type="submit">Post Comment</button>
-  </form>
-@endif
-
-
-<script>
-    function toggleReplyForm(commentId) {
-        const form = document.getElementById('reply-form-' + commentId);
-        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-    }
-</script>
-
-
-
-
-        <!-- <div class="action-btn comment-btn"><i class="ion ion-md-chatbubbles"></i> <span class="comment-count">0</span></div> -->
-        <!-- <div class="action-btn view-btn"><i class="ion ion-md-eye"></i> <span class="view-count">0</span></div> -->
+        </div>
         <div class="action-btn share-btn"><i class="ion ion-md-share"></i></div>
       </div>
     </div>
+    <!-- =============coment repply============== -->
+
+@foreach($newsfeed as $post)
+<div class="newsfeed-box" style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
+    <h3>{{ $post->title }}</h3>
+    <p>{{ $post->content }}</p>
+    {{-- 🟡 Comment Toggle Button --}}
+    <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $post->id }})"
+         style="cursor: pointer; color: #007bff; margin-top: 10px;">
+        <i class="ion ion-md-chatbubbles"></i>
+        <span class="comment-count">{{ $post->comments->count() }}</span> Comments
+    </div>
+
+    {{-- 🟢 Hidden Chatbox (comment area) --}}
+    <div class="comment-section" id="comment-box-{{ $post->id }}" style="display: none; margin-top: 15px;">
+
+        {{-- Comment Form --}}
+        @auth
+        <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
+            @csrf
+            <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+            <button type="submit">Comment</button>
+        </form>
+        @endauth
+
+        @guest
+        <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
+            @csrf
+            <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+            <button type="submit">Comment</button>
+        </form>
+        @endguest
+
+        {{-- Show Comments --}}
+        @foreach($post->comments->where('parent_id', null) as $comment)
+        <div class="comment-box" style="margin-left: 10px; padding: 5px 0;">
+            <strong>{{ $comment->user->name ?? 'General Customer' }}</strong>: {{ $comment->comment }}
+        @auth
+          @if(auth()->id() == $comment->user_id)
+              <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" style="display:inline;">
+                  @csrf
+                  @method('DELETE')
+                  <button style="border: none;" type="submit" onclick="return confirm('Are you sure to delete this comment?')"> ...<i class="fas fa-trash-alt"></i></button>
+              </form>
+          @endif
+        @endauth
+            {{-- Replies --}}
+            @foreach($comment->replies as $reply)
+            <div class="reply-box ml-4 text-gray-500" style="margin-left: 20px;">
+                <strong>{{ $reply->user->name }}</strong>: {{ $reply->comment }}
+            </div>
+            @endforeach
+            
+            {{-- Reply Form --}}
+            @auth
+            <form action="{{ route('comment.reply') }}" method="POST" style="margin-top: 5px;">
+                @csrf
+                <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+                <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                <input type="text" name="comment" placeholder="Reply..." style="width: 90%; padding: 4px;">
+                <button type="submit">Reply</button>
+            </form>
+            @endauth
+        </div>
+        @endforeach
+    </div>
+</div>
+@endforeach
+<!-- =============coment repply============== -->
   @endforeach
 </div>
 
@@ -279,13 +312,16 @@ $('.love-btn').click(function () {
         }
     });
 });
-
-
-
-
-
+// =================coment repply=============
 </script>
-
-
-
+@endsection
+@section('scripts')
+<script>
+    function toggleCommentBox(postId) {
+        const box = document.getElementById('comment-box-' + postId);
+        if (box) {
+            box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+        }
+    }
+</script>
 @endsection

@@ -38,11 +38,10 @@ class NewsFeed extends Model
 // comment 
 // app/Models/Newsfeed.php
 
-public function comments()
-{
-    // শুধু মূল comments (parent_id NULL)
-    return $this->hasMany(Comment::class, 'newsfeed_id')->whereNull('parent_id')->latest();
-}
+    public function comments() {
+        return $this->hasMany(Comment::class, 'newsfeed_id')->whereNull('parent_id')->latest();
+    }
+
 
 
 
