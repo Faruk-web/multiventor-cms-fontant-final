@@ -6,18 +6,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <![endif]-->
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-
-
         {{-- X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token --}} 
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-
-
         <meta name="description" content="">
         <meta name="author" content="">
-
-
         {{-- Static And Dynamic SEO (HTML meta tags): Check the HTML <meta> tags and <title> tag in front/layout/layout.blade.php. Check index() method in Front/IndexController.php, listing() method in Front/ProductsController.php, detail() method in Front/ProductsController.php and cart() method in Front/ProductsController.php     --}}
         @if (!empty($meta_description))
             <meta name="description" content="{{ $meta_description }}">
@@ -59,42 +51,23 @@
         <link rel="stylesheet" href="{{ url('front/css/utility.css') }}">
         <!-- Main -->
         <link rel="stylesheet" href="{{ url('front/css/bundle.css') }}">
-
-
-
         {{-- EasyZoom plugin for zooming product images upon hover --}}
         {{-- My EasyZoom (jQuery image zoom plugin): https://i-like-robots.github.io/EasyZoom/ --}}
         <link rel="stylesheet" href="{{ url('front/css/easyzoom.css') }}">
-
-
-
         {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
         <link rel="stylesheet" href="{{ url('front/css/custom.css') }}">
-
-
-
     </head>
     <body>
-
-
         {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
         <div class="loader">
             <img src="{{ asset('front/images/loaders/loader.gif') }}" alt="loading..." />
          </div>
-
-
-
         <!-- app -->
-        <div id="app">
-
+        <div id="app" style="background: beige;">
             {{-- Header partial --}}
             @include('front.layout.header')
-
-
             {{-- Middle Content (varies from a page to another) --}}
             @yield('content')
-
-
             {{-- Footer partial --}}
             @include('front.layout.footer')
 
@@ -173,14 +146,9 @@
         <script type="text/javascript" src="{{ url('front/js/owl.carousel.min.js') }}"></script>
         <!-- Main -->
         <script type="text/javascript" src="{{ url('front/js/app.js') }}"></script>
-
         @yield('scripts')
-
         <!-- Our front/js/custom.js file --> 
         <script type="text/javascript" src="{{ url('front/js/custom.js') }}"></script>
-
-
-
         {{-- EasyZoom plugin for zooming product images upon hover --}}
         {{-- My EasyZoom (jQuery image zoom plugin): https://i-like-robots.github.io/EasyZoom/ --}}
         <script type="text/javascript" src="{{ url('front/js/easyzoom.js') }}"></script>
@@ -215,13 +183,7 @@
                 }
             });
         </script>
-
-
-
         {{-- To enable us to write PHP code within JavaScript code (to operate the Dynamic Filters dynamically (the second way)) --}} 
         @include('front.layout.scripts') {{-- scripts.blade.php --}}
-
-
-
     </body>
 </html>
