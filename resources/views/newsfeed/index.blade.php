@@ -100,7 +100,11 @@
     padding: 6px 10px;
     margin-top: 5px;
 }
-
+/* ===================shear link=============== */
+.share-btn {
+  cursor: pointer;
+  color: #4267B2;
+}
   </style>
 
 <div class="container">
@@ -170,75 +174,81 @@
             <i class="{{ $item->isLovedBy(auth()->id()) ? 'fas fa-heart text-danger' : 'far fa-heart' }}"></i>
             <span class="love-count">{{ $item->loves->count() }}</span>
         </div>
-        <div class="action-btn share-btn"><i class="ion ion-md-share"></i></div>
+
+        <div class="postid" data-url="{{ route('newsfeed.edit', $item->id) }}" data-title="Post Title 2">
+        <div class="action-btn share-btn" onclick="shareToFacebook(this)">
+          <i class="ion ion-md-share"></i> শেয়ার
+        </div>
+      </div>
+
       </div>
     </div>
     <!-- =============coment repply============== -->
 
-@foreach($newsfeed as $post)
-<div class="newsfeed-box" style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
-    <h3>{{ $post->title }}</h3>
-    <p>{{ $post->content }}</p>
-    {{-- 🟡 Comment Toggle Button --}}
-    <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $post->id }})"
-         style="cursor: pointer; color: #007bff; margin-top: 10px;">
-        <i class="ion ion-md-chatbubbles"></i>
-        <span class="comment-count">{{ $post->comments->count() }}</span> Comments
-    </div>
-
-    {{-- 🟢 Hidden Chatbox (comment area) --}}
-    <div class="comment-section" id="comment-box-{{ $post->id }}" style="display: none; margin-top: 15px;">
-
-        {{-- Comment Form --}}
-        @auth
-        <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
-            @csrf
-            <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
-            <button type="submit">Comment</button>
-        </form>
-        @endauth
-
-        @guest
-        <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
-            @csrf
-            <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
-            <button type="submit">Comment</button>
-        </form>
-        @endguest
-
-        {{-- Show Comments --}}
-        @foreach($post->comments->where('parent_id', null) as $comment)
-        <div class="comment-box" style="margin-left: 10px; padding: 5px 0;">
-            <strong>{{ $comment->user->name ?? 'General Customer' }}</strong>: {{ $comment->comment }}
-        @auth
-          @if(auth()->id() == $comment->user_id)
-              <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" style="display:inline;">
-                  @csrf
-                  @method('DELETE')
-                  <button style="border: none;" type="submit" onclick="return confirm('Are you sure to delete this comment?')"> ...<i class="fas fa-trash-alt"></i></button>
-              </form>
-          @endif
-        @endauth
-            {{-- Replies --}}
-            @foreach($comment->replies as $reply)
-            <div class="reply-box ml-4 text-gray-500" style="margin-left: 20px;">
-                <strong>{{ $reply->user->name }}</strong>: {{ $reply->comment }}
+        @foreach($newsfeed as $post)
+        <div class="newsfeed-box" style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
+            <h3>{{ $post->title }}</h3>
+            <p>{{ $post->content }}</p>
+            {{-- 🟡 Comment Toggle Button --}}
+            <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $post->id }})"
+                style="cursor: pointer; color: #007bff; margin-top: 10px;">
+                <i class="ion ion-md-chatbubbles"></i>
+                <span class="comment-count">{{ $post->comments->count() }}</span> Comments
             </div>
-            @endforeach
-            
-            {{-- Reply Form --}}
-            @auth
-            <form action="{{ route('comment.reply') }}" method="POST" style="margin-top: 5px;">
-                @csrf
-                <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-                <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                <input type="text" name="comment" placeholder="Reply..." style="width: 90%; padding: 4px;">
-                <button type="submit">Reply</button>
-            </form>
-            @endauth
-        </div>
+
+            {{-- 🟢 Hidden Chatbox (comment area) --}}
+            <div class="comment-section" id="comment-box-{{ $post->id }}" style="display: none; margin-top: 15px;">
+
+                {{-- Comment Form --}}
+                @auth
+                <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
+                    @csrf
+                    <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+                    <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+                    <button type="submit">Comment</button>
+                </form>
+                @endauth
+
+                @guest
+                <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
+                    @csrf
+                    <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+                    <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+                    <button type="submit">Comment</button>
+                </form>
+                @endguest
+
+                {{-- Show Comments --}}
+                @foreach($post->comments->where('parent_id', null) as $comment)
+                <div class="comment-box" style="margin-left: 10px; padding: 5px 0;">
+                  <strong>{{ $comment->user->name ?? 'General Customer' }}</strong>: {{ $comment->comment }}
+              @auth
+                @if(auth()->id() == $comment->user_id)
+                    <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button style="border: none;" type="submit" onclick="return confirm('Are you sure to delete this comment?')"> ...<i class="fas fa-trash-alt"></i></button>
+                    </form>
+                @endif
+              @endauth
+                  {{-- Replies --}}
+                  @foreach($comment->replies as $reply)
+                  <div class="reply-box ml-4 text-gray-500" style="margin-left: 20px;">
+                      <strong>{{ $reply->user->name }}</strong>: {{ $reply->comment }}
+                  </div>
+                  @endforeach
+                  
+                  {{-- Reply Form --}}
+                  @auth
+                  <form action="{{ route('comment.reply') }}" method="POST" style="margin-top: 5px;">
+                      @csrf
+                      <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
+                      <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                      <input type="text" name="comment" placeholder="Reply..." style="width: 90%; padding: 4px;">
+                      <button type="submit">Reply</button>
+                  </form>
+                  @endauth
+              </div>
         @endforeach
     </div>
 </div>
@@ -324,4 +334,14 @@ $('.love-btn').click(function () {
         }
     }
 </script>
+<!-- ========== shear link================ -->
+<script>
+function shareToFacebook(button) {
+  const postDiv = button.closest('.postid');
+  const url = postDiv.getAttribute('data-url');
+  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  window.open(shareUrl, '_blank', 'width=600,height=400');
+}
+</script>
+
 @endsection

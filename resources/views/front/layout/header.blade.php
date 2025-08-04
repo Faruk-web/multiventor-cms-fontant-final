@@ -64,7 +64,12 @@ $sections = \App\Models\Section::sections();
                                         My Account
                                     </a>
                                 </li>
-
+                                  <li>
+                                    <a href="{{ url('customer/Wardrobe') }}"> 
+                                        <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
+                                        Wardrobe
+                                    </a>
+                                </li>
                                 
                                 <li>
                                     <a href="{{ url('user/orders') }}"> 

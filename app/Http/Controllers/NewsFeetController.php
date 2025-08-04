@@ -9,7 +9,8 @@ use App\Models\Product;
 use App\Models\Like;
 use App\Models\Love;
 use App\Models\Comment;
-
+use App\Models\Order;
+use App\Models\OrdersProduct;
 use App\Models\VendorsBusinessDetail;
 use Illuminate\Support\Facades\Auth; 
 
@@ -261,6 +262,14 @@ public function destroy($id)
 
     return redirect()->back()->with('success', 'Review deleted successfully!');
 }
+// ==================Wardrobe=============
+public function Wardrobe()
+    {
+       $orders_products =DB::table('orders_products')->pluck('product_id')->unique();
+       $products =DB::table('products')->pluck('id');
+        $orders = Order::with('orders_products.product')->where('user_id', Auth::id())->get();
 
+        return view('newsfeed.Wardrobe', compact('orders_products', 'products','orders'));
+    }
 
 }

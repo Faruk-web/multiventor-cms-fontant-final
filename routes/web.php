@@ -314,6 +314,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
 Route::get('news/feed', 'App\Http\Controllers\NewsFeetController@index')->name('news.feed');
 Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
+Route::get('customer/Wardrobe', 'App\Http\Controllers\NewsFeetController@Wardrobe')->name('customer.Wardrobe');
 Route::post('/review/store', 'App\Http\Controllers\NewsFeetController@store')->name('review.store');
 Route::get('newsfeed/{id}/edit', 'App\Http\Controllers\NewsFeetController@edit')->name('newsfeed.edit');
 Route::put('newsfeed/{id}', 'App\Http\Controllers\NewsFeetController@update')->name('newsfeed.update');

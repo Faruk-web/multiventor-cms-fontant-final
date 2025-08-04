@@ -1,7 +1,6 @@
 {{-- This page is accessed from My Account tab in the dropdown menu in the header (in front/layout/header.blade.php). Check userAccount() method in Front/UserController.php --}} 
 @extends('front.layout.layout')
 
-
 @section('content')
     <!-- Page Introduction Wrapper -->
     <div class="page-style-a">
