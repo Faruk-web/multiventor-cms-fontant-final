@@ -160,6 +160,7 @@ public function store(Request $request)
 {
     $request->validate([
         'product_name' => 'required|string|max:255',
+        'user_id' => 'required|integer',
         'vendor_id' => 'required|integer',
         'tags' => 'nullable|array',
         'review' => 'required|string',
