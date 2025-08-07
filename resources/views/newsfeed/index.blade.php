@@ -64,7 +64,7 @@
     .post-actions {
     display: flex;
     justify-content: space-between;
-    padding: 0 15px 15px;
+    padding: 14px 15px 1px;
     font-size: 20px;
     color: #555;
     }
@@ -113,35 +113,30 @@
       
       {{-- Header --}}
       <div class="post-header d-flex justify-between align-center">
-      <div class="d-flex align-center">
-        <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
-        <div class="username">{{ $item->name }}</div>
-      </div>
-
-      {{-- Right Side Buttons --}}
-      @if(auth()->id() === $item->user_id)
-        <div class="header-actions">
-          <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
-            <i class="fas fa-edit"></i>
-          </a>
-          <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </form>
+        <div class="d-flex align-center">
+          <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
+          <div class="username">{{ $item->name }}</div>
         </div>
-      @endif
-    </div>
 
+        @if(auth()->id() === $item->user_id)
+          <div class="header-actions">
+            <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+              @csrf
+              @method('DELETE')
+              <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </form>
+          </div>
+        @endif
+      </div>
 
       {{-- Media --}}
       <div style="position:relative">
-        @php
-          $ext = pathinfo($item->media_path, PATHINFO_EXTENSION);
-        @endphp
-
+        @php $ext = pathinfo($item->media_path, PATHINFO_EXTENSION); @endphp
         @if(in_array($ext, ['jpg','jpeg','png','gif']))
           <img class="post-img" src="{{ asset($item->media_path) }}" alt="post image">
         @elseif(in_array($ext, ['mp4','mov','avi']))
@@ -150,112 +145,110 @@
           </video>
         @endif
 
-        {{-- 🔁 Tag Loop Inside overlay-buttons --}}
         <div class="overlay-buttons">
           @foreach(json_decode($item->tags) as $tagId)
             @if(isset($allProducts[$tagId]))
-              <button title="Tagged Product"><a class="item-img-wrapper-link" href="{{ url('product/' . $tagId) }}">{{ $allProducts[$tagId] }}</a></button>
+              <button title="Tagged Product">
+                <a class="item-img-wrapper-link" href="{{ url('product/' . $tagId) }}">{{ $allProducts[$tagId] }}</a>
+              </button>
             @endif
           @endforeach
         </div>
       </div>
+
       {{-- Post Content --}}
       <div class="post-actions">
-        <p>{{ $item->review }}</p>
-
-          
+        <span>{{ $item->review }}</span>
       </div>
+
+      {{-- Like/Love/Share --}}
       <div class="post-actions">
-          <div class="like-btn" data-id="{{ $item->id }}">
-              <i class="{{ $item->isLikedBy(auth()->id()) ? 'fas fa-thumbs-up text-primary' : 'far fa-thumbs-up' }}"></i>
-              <span class="like-count">{{ $item->likes->count() }}</span>
+        <div class="like-btn" data-id="{{ $item->id }}">
+          <i class="{{ $item->isLikedBy(auth()->id()) ? 'fas fa-thumbs-up text-primary' : 'far fa-thumbs-up' }}"></i>
+          <span class="like-count">{{ $item->likes->count() }}</span>
+        </div>
+        <div class="love-btn" data-id="{{ $item->id }}">
+          <i class="{{ $item->isLovedBy(auth()->id()) ? 'fas fa-heart text-danger' : 'far fa-heart' }}"></i>
+          <span class="love-count">{{ $item->loves->count() }}</span>
+        </div>
+        <div class="postid" data-url="{{ route('newsfeed.edit', $item->id) }}" data-title="Post Title">
+          <div class="action-btn share-btn" onclick="shareToFacebook(this)">
+            <i class="ion ion-md-share"></i> শেয়ার
           </div>
-          <div class="love-btn" data-id="{{ $item->id }}">
-            <i class="{{ $item->isLovedBy(auth()->id()) ? 'fas fa-heart text-danger' : 'far fa-heart' }}"></i>
-            <span class="love-count">{{ $item->loves->count() }}</span>
-        </div>
-
-        <div class="postid" data-url="{{ route('newsfeed.edit', $item->id) }}" data-title="Post Title 2">
-        <div class="action-btn share-btn" onclick="shareToFacebook(this)">
-          <i class="ion ion-md-share"></i> শেয়ার
         </div>
       </div>
 
-      </div>
-    </div>
-    <!-- =============coment repply============== -->
+      {{-- 🔁 Comment Section For This Post --}}
+      <div class="newsfeed-box" style="margin-top: 15px; border: 1px solid #ccc; padding: 15px;">
+        {{-- 🟡 Toggle Button --}}
+        <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $item->id }})" style="cursor: pointer; color: #007bff;">
+          <i class="ion ion-md-chatbubbles"></i>
+          <span class="comment-count">{{ $item->comments->count() }}</span> Comments
+        </div>
 
-        @foreach($newsfeed as $post)
-        <div class="newsfeed-box" style="margin-bottom: 30px; border: 1px solid #ccc; padding: 20px;">
-            <h3>{{ $post->title }}</h3>
-            <p>{{ $post->content }}</p>
-            {{-- 🟡 Comment Toggle Button --}}
-            <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $post->id }})"
-                style="cursor: pointer; color: #007bff; margin-top: 10px;">
-                <i class="ion ion-md-chatbubbles"></i>
-                <span class="comment-count">{{ $post->comments->count() }}</span> Comments
+        {{-- 🟢 Comment Box --}}
+        <div class="comment-section" id="comment-box-{{ $item->id }}" style="display: none; margin-top: 15px;">
+          {{-- Comment Form --}}
+          @auth
+          <form action="{{ route('comment.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
+            <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+            <button type="submit">Comment</button>
+          </form>
+          @endauth
+          @guest
+            <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
+                @csrf
+                <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
+                <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
+                <button type="submit">Comment</button>
+            </form>
+            @endguest
+          {{-- Comments --}}
+          @foreach($item->comments->where('parent_id', null) as $comment)
+          <div class="comment-box" style="margin-left: 10px; padding: 5px 0;">
+            <strong>{{ $comment->user->name ?? 'General Customer' }}</strong>: {{ $comment->comment }}
+
+            {{-- Delete --}}
+            @auth
+            @if(auth()->id() == $comment->user_id)
+              <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button style="border: none;" type="submit" onclick="return confirm('Are you sure to delete this comment?')">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            @endif
+            @endauth
+
+            {{-- Replies --}}
+            @foreach($comment->replies as $reply)
+            <div class="reply-box" style="margin-left: 20px;">
+              <strong>{{ $reply->user->name }}</strong>: {{ $reply->comment }}
             </div>
+            @endforeach
 
-            {{-- 🟢 Hidden Chatbox (comment area) --}}
-            <div class="comment-section" id="comment-box-{{ $post->id }}" style="display: none; margin-top: 15px;">
+            {{-- Reply Form --}}
+            @auth
+            <form action="{{ route('comment.reply') }}" method="POST" style="margin-top: 5px;">
+              @csrf
+              <input type="hidden" name="newsfeed_id" value="{{ $item->id }}">
+              <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+              <input type="text" name="comment" placeholder="Reply..." style="width: 90%; padding: 4px;">
+              <button type="submit">Reply</button>
+            </form>
+            @endauth
+          </div>
+          @endforeach
+        </div>
+      </div>
 
-                {{-- Comment Form --}}
-                @auth
-                <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
-                    @csrf
-                    <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-                    <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
-                    <button type="submit">Comment</button>
-                </form>
-                @endauth
-
-                @guest
-                <form action="{{ route('comment.store') }}" method="POST" style="margin-bottom: 10px;">
-                    @csrf
-                    <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-                    <textarea name="comment" placeholder="Write a comment..." style="width: 100%; padding: 8px;"></textarea>
-                    <button type="submit">Comment</button>
-                </form>
-                @endguest
-
-                {{-- Show Comments --}}
-                @foreach($post->comments->where('parent_id', null) as $comment)
-                <div class="comment-box" style="margin-left: 10px; padding: 5px 0;">
-                  <strong>{{ $comment->user->name ?? 'General Customer' }}</strong>: {{ $comment->comment }}
-              @auth
-                @if(auth()->id() == $comment->user_id)
-                    <form action="{{ route('comment.destroy', $comment->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button style="border: none;" type="submit" onclick="return confirm('Are you sure to delete this comment?')"> ...<i class="fas fa-trash-alt"></i></button>
-                    </form>
-                @endif
-              @endauth
-                  {{-- Replies --}}
-                  @foreach($comment->replies as $reply)
-                  <div class="reply-box ml-4 text-gray-500" style="margin-left: 20px;">
-                      <strong>{{ $reply->user->name }}</strong>: {{ $reply->comment }}
-                  </div>
-                  @endforeach
-                  
-                  {{-- Reply Form --}}
-                  @auth
-                  <form action="{{ route('comment.reply') }}" method="POST" style="margin-top: 5px;">
-                      @csrf
-                      <input type="hidden" name="newsfeed_id" value="{{ $post->id }}">
-                      <input type="hidden" name="parent_id" value="{{ $comment->id }}">
-                      <input type="text" name="comment" placeholder="Reply..." style="width: 90%; padding: 4px;">
-                      <button type="submit">Reply</button>
-                  </form>
-                  @endauth
-              </div>
-        @endforeach
     </div>
-</div>
-@endforeach
-<!-- =============coment repply============== -->
   @endforeach
 </div>
+
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -327,12 +320,22 @@ $('.love-btn').click(function () {
 @endsection
 @section('scripts')
 <script>
+    // function toggleCommentBox(postId) {
+    //     const box = document.getElementById('comment-box-' + postId);
+    //     if (box) {
+    //         box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+    //     }
+    // }
+
     function toggleCommentBox(postId) {
-        const box = document.getElementById('comment-box-' + postId);
-        if (box) {
-            box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
-        }
-    }
+  const box = document.getElementById('comment-box-' + postId);
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
 </script>
 <!-- ========== shear link================ -->
 <script>
