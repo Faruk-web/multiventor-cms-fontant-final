@@ -402,10 +402,6 @@
         </div>
     </section>
     <!-- Top Collection /- -->
-
-
-
-    
     @if (isset($fixBanners[1]['image']))
         <!-- Banner-Layer -->
         <div class="banner-layer">
@@ -419,9 +415,55 @@
         </div>
         <!-- Banner-Layer /- -->    
     @endif
+ <!-- Top Collection -->
+    <section class="section-maker">
+        <div class="container">
+            <div class="sec-maker-header text-center">
+                <h3 class="sec-maker-h3">TOP SHOP</h3>
+            </div>
+            <div class="wrapper-content">
+                <div class="outer-area-tab">
+                    <div class="tab-content">
+                        <div class="tab-pane active show fade" id="men-latest-products">
+                            <div class="slider-fouc">
+                                <div class="products-slider owl-carousel" data-item="4">
 
+                                    {{-- Show 'New Arrivals'. Show the LATEST 8 products ONLY. Check the index() method in IndexController.php --}} 
+                                    @foreach ($vendor as $item)
+                                        <div class="item">
+                                            <div class="image-container">
+                                                <a class="item-img-wrapper-link" href="{{ url('vendors/product/' . $item['id']) }}">
+                                                        <img class="img-fluid"  src="{{ asset('admin/images/photos/' . $item->image) }}" alt="{{ $item->name }}">
+                                                </a>
+                                            </div>
+                                            <div class="item-content">
+                                                <div class="what-product-is">
+                                                    <h6 class="item-title">
+                                                        <a href="{{ url('vendors/product/' . $item['id']) }}">Shop name: {{ $item->businessDetails?->shop_name ?? 'missing' }}</a>
+                                                    </h6>
+                                                    <ul class="bread-crumb">
+                                                        <li>
+                                                            <a href="{{ url('vendors/product/' . $item['id']) }}">Shop address: {{ $item->businessDetails?->shop_address ?? 'missing' }}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tag new">
+                                                <span>NEW</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
 
-
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Top Collection /- -->
     <!-- Site-Priorities -->
     <section class="app-priority">
         <div class="container">

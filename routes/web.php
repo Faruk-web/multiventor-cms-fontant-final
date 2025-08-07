@@ -315,24 +315,17 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 Route::get('news/feed', 'App\Http\Controllers\NewsFeetController@index')->name('news.feed');
 Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
 Route::get('customer/Wardrobe', 'App\Http\Controllers\NewsFeetController@Wardrobe')->name('customer.Wardrobe');
+Route::get('vendors/product/{id}', 'App\Http\Controllers\NewsFeetController@vendorsproduct')->name('vendor.product');
 Route::post('/review/store', 'App\Http\Controllers\NewsFeetController@store')->name('review.store');
 Route::get('newsfeed/{id}/edit', 'App\Http\Controllers\NewsFeetController@edit')->name('newsfeed.edit');
 Route::put('newsfeed/{id}', 'App\Http\Controllers\NewsFeetController@update')->name('newsfeed.update');
 Route::delete('newsfeed/{id}', 'App\Http\Controllers\NewsFeetController@destroy')->name('newsfeed.destroy');
-
-// Route::post('/posts/{id}/like', [PostController::class, 'like']);
-// Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
-// Route::post('/posts/{id}/view', [PostController::class, 'view']);
-// Route::get('/newsfeed', [NewsfeedController::class, 'index'])->name('newsfeed.index');
 Route::post('/newsfeed/like/{id}', 'App\Http\Controllers\NewsFeetController@likeToggle')->middleware('auth');
 Route::post('/newsfeed/{id}/like', 'App\Http\Controllers\NewsFeetController@like')->name('newsfeed.like');
 // love
 Route::post('/newsfeed/{id}/love', 'App\Http\Controllers\NewsFeetController@love')->name('newsfeed.love');
-
 // comment
-
 Route::post('/comment', 'App\Http\Controllers\NewsFeetController@commentstore')->name('comment.store');
-
 // Only users can reply
 Route::post('/comment/reply', 'App\Http\Controllers\NewsFeetController@reply')
     ->middleware('customer.only')

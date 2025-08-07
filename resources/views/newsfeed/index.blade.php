@@ -320,22 +320,14 @@ $('.love-btn').click(function () {
 @endsection
 @section('scripts')
 <script>
-    // function toggleCommentBox(postId) {
-    //     const box = document.getElementById('comment-box-' + postId);
-    //     if (box) {
-    //         box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
-    //     }
-    // }
-
     function toggleCommentBox(postId) {
-  const box = document.getElementById('comment-box-' + postId);
-  if (box.style.display === 'none') {
-    box.style.display = 'block';
-  } else {
-    box.style.display = 'none';
-  }
-}
-
+      const box = document.getElementById('comment-box-' + postId);
+      if (box.style.display === 'none') {
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
 </script>
 <!-- ========== shear link================ -->
 <script>

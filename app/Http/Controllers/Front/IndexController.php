@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\Banner;
+use App\Models\Admin;
 use App\Models\Product;
 
 class IndexController extends Controller
@@ -25,14 +25,13 @@ class IndexController extends Controller
             'is_featured' => 'Yes',
             'status'      => 1 // product is enabled (active)
         ])->limit(6)->get()->toArray(); // show 'Featured Products'    
-
-
+        $vendor = Admin::with('businessDetails')->where('type', 'vendor')->where('status', 1)->get();
         // Static SEO (HTML meta tags): Check the HTML <meta> tags and <title> tag in front/layout/layout.blade.php    
         $meta_title       = 'Multi Vendor E-commerce Website';
         $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
         $meta_keywords    = 'eshop website, online shopping, multi vendor e-commerce';
 
 
-        return view('front.index')->with(compact('sliderBanners', 'fixBanners', 'newProducts', 'bestSellers', 'discountedProducts', 'featuredProducts', 'meta_title', 'meta_description', 'meta_keywords')); // this is the same as:    return view('front/index');
+        return view('front.index')->with(compact('sliderBanners', 'fixBanners', 'newProducts', 'bestSellers', 'discountedProducts', 'featuredProducts','vendor', 'meta_title', 'meta_description', 'meta_keywords')); // this is the same as:    return view('front/index');
     }
 }

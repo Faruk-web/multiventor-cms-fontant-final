@@ -36,4 +36,9 @@ class Admin extends Authenticatable
     public function vendorBank() { // relationship between `admins` and `vendors_bank_details` table
         return $this->belongsTo('App\Models\VendorsBankDetail', 'vendor_id'); // 'vendor_id' is the foreign key of the `admins` table
     }
+    // App\Models\Admin.php
+    public function businessDetails() {
+        return $this->hasOne('App\Models\VendorsBusinessDetail', 'vendor_id', 'vendor_id');
+    }
+
 }

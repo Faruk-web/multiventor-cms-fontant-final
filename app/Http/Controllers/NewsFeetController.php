@@ -11,6 +11,7 @@ use App\Models\Love;
 use App\Models\Comment;
 use App\Models\Order;
 use App\Models\OrdersProduct;
+use App\Models\Admin;
 use App\Models\VendorsBusinessDetail;
 use Illuminate\Support\Facades\Auth; 
 
@@ -271,6 +272,12 @@ public function Wardrobe()
         $orders = Order::with('orders_products.product')->where('user_id', Auth::id())->get();
 
         return view('newsfeed.Wardrobe', compact('orders_products', 'products','orders'));
+    }
+    public function vendorsproduct($id)
+    {
+        $vendor = Admin::with('businessDetails')->findOrFail($id); // single object
+        $products = Product::where('vendor_id', $vendor->id)->get(); // collection
+        return view('newsfeed.vendorsproduct', compact('vendor', 'products'));
     }
 
 }
