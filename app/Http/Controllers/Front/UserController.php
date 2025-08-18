@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 use App\Models\User;
 use App\Models\Cart;
-
-
+use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -19,7 +18,12 @@ class UserController extends Controller
     public function loginRegister() {
         return view('front.users.login_register');
     }
-
+    public function userprofile() {
+        $orders_products =DB::table('orders_products')->pluck('product_id')->unique();
+       $products =DB::table('products')->pluck('id');
+        $orders = Order::with('orders_products.product')->where('user_id', Auth::id())->get();
+        return view('front.users.profile',compact('orders_products','products','orders'));
+    }
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js    
     public function userRegister(Request $request) {
         if ($request->ajax()) { // if the request is coming via an AJAX call

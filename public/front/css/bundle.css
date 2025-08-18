@@ -1826,7 +1826,7 @@ background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1
   right: 24px;
   bottom: 14px; }
   .fixed-responsive-container .fixed-responsive-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: 59px;
     position: relative; }
     .fixed-responsive-container .fixed-responsive-wrapper button[type="button"], .fixed-responsive-container .fixed-responsive-wrapper a {
       padding: 0;

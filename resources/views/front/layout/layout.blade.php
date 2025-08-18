@@ -56,6 +56,7 @@
         <link rel="stylesheet" href="{{ url('front/css/easyzoom.css') }}">
         {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
         <link rel="stylesheet" href="{{ url('front/css/custom.css') }}">
+        <link rel="stylesheet" href="{{ url('front/css/mobileresponsive.css') }}">
     </head>
     <body>
         {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
@@ -63,7 +64,7 @@
             <img src="{{ asset('front/images/loaders/loader.gif') }}" alt="loading..." />
          </div>
         <!-- app -->
-        <div id="app" style="background: beige;">
+        <div id="app">
             {{-- Header partial --}}
             @include('front.layout.header')
             {{-- Middle Content (varies from a page to another) --}}

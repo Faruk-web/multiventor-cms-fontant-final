@@ -156,8 +156,6 @@
                         <div class="tab-pane show fade" id="men-best-selling-products">
                             <div class="slider-fouc">
                                 <div class="products-slider owl-carousel" data-item="4">
-
-
                                     {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}} 
                                     @foreach ($bestSellers as $product)
                                         @php

@@ -1,3 +1,4 @@
+
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
@@ -148,5 +149,33 @@
         </div>
     </div>
     <!-- Bottom-Footer /- -->
+        <!-- ✅ Bottom Navigation -->
+  <div class="bottom-nav-mobile">
+    <a href="{{ url('/') }}" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="{{ url('/shop') }}" class="nav-item">
+      <i class="fas fa-shopping-bag"></i>
+      <span>Shop</span>
+    </a>
+    <div class="plus-btn">+</div>
+    <a href="#" class="nav-item">
+      <i class="fas fa-bell"></i>
+      <span>Alerts</span>
+    </a>
+
+    @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}
+     <a href="{{url('/user/profile')}}" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </a>
+    @else
+    <a href="{{url('/user/login-register')}}" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Login</span>
+    </a>
+    @endif
+  </div>
 </footer>
 <!-- Footer /- -->

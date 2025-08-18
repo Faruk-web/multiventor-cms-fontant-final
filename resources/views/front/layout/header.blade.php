@@ -305,7 +305,7 @@ $sections = \App\Models\Section::sections();
                             </a>
                         </li>
                          <li>
-                            <a href="{{ url('news/feed') }}">NewsFeed 
+                            <a href="{{ url('/') }}">NewsFeed 
                             <span class="superscript-label-new">>Style</span>
                             </a>
                         </li>

@@ -30,42 +30,40 @@
                 <h3 class="sec-maker-h3">Buying Products</h3>
             </div>
             <div class="row">
-    @foreach($orders as $order)
-        @foreach($order->orders_products as $orderProduct)
-            @php
-                $product = $orderProduct->product;
-                $imagePath = 'front/images/product_images/small/' . ($product->product_image ?? 'no-image.png');
-                $productUrl = url('product/' . $product->id);
-                $discountPrice = \App\Models\Product::getDiscountPrice($product->id);
-            @endphp
+                @foreach($orders as $order)
+                    @foreach($order->orders_products as $orderProduct)
+                        @php
+                            $product = $orderProduct->product;
+                            $imagePath = 'front/images/product_images/small/' . ($product->product_image ?? 'no-image.png');
+                            $productUrl = url('product/' . $product->id);
+                            $discountPrice = \App\Models\Product::getDiscountPrice($product->id);
+                        @endphp
 
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <a href="{{ $productUrl }}">
-                        <img src="{{ asset($imagePath) }}" class="card-img-top" alt="{{ $product->product_name }}">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $product->product_name }}</h5>
-                        <p class="card-text">{{ $product->product_code }}</p>
-                        <p class="card-text">Order Date: {{ \Carbon\Carbon::parse($order->created_at)->format('d M, Y') }} |</p>
-                        <p class="card-text">Customer: {{ $order->user->name ?? 'Unknown' }}</p>
-                        <div class="mb-2">
-                            @if($discountPrice > 0)
-                                <span class="text-success font-weight-bold">Rs. {{ $discountPrice }}</span>
-                                <span class="text-muted text-decoration-line-through">Rs. {{ $product->product_price }}</span>
-                            @else
-                                <span class="text-dark font-weight-bold">Rs. {{ $product->product_price }}</span>
-                            @endif
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <a href="{{ $productUrl }}">
+                                    <img src="{{ asset($imagePath) }}" class="card-img-top" alt="{{ $product->product_name }}">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $product->product_name }}</h5>
+                                    <p class="card-text">{{ $product->product_code }}</p>
+                                    <p class="card-text">Order Date: {{ \Carbon\Carbon::parse($order->created_at)->format('d M, Y') }} |</p>
+                                    <p class="card-text">Customer: {{ $order->user->name ?? 'Unknown' }}</p>
+                                    <div class="mb-2">
+                                        @if($discountPrice > 0)
+                                            <span class="text-success font-weight-bold">Rs. {{ $discountPrice }}</span>
+                                            <span class="text-muted text-decoration-line-through">Rs. {{ $product->product_price }}</span>
+                                        @else
+                                            <span class="text-dark font-weight-bold">Rs. {{ $product->product_price }}</span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ $productUrl }}" class="btn btn-primary btn-sm">View Product</a>
+                                </div>
+                            </div>
                         </div>
-                        <a href="{{ $productUrl }}" class="btn btn-primary btn-sm">View Product</a>
-                    </div>
-                </div>
+                    @endforeach
+                @endforeach
             </div>
-        @endforeach
-    @endforeach
-</div>
-
-
         </div>
         <div class="u-s-p-t-80">
             <div id="map"></div>

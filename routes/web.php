@@ -175,7 +175,7 @@ Route::get('orders/invoice/download/{id}', 'App\Http\Controllers\Admin\OrderCont
 
 // Second: FRONT section routes:
 Route::namespace('App\Http\Controllers\Front')->group(function() {
-    Route::get('/', 'IndexController@index');
+    Route::get('/shop', 'IndexController@index');
 
 
     // Dynamic Routes for the `url` column in the `categories` table using a foreach loop    // Listing/Categories Routes
@@ -260,7 +260,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::group(['middleware' => ['auth']], function() {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount');
-
+        Route::get('user/profile', 'UserController@userprofile');
         // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
         Route::post('user/update-password', 'UserController@userUpdatePassword');
 
@@ -284,8 +284,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
         // Render User 'My Orders' page
         Route::get('user/orders/{id?}', 'OrderController@orders'); // If the slug {id?} (Optional Parameters) is passed in, this means go to the front/orders/order_details.blade.php page, and if not, this means go to the front/orders/orders.blade.php page
-
-
 
         // PayPal routes:
         // PayPal payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/paypal/paypal.blade.php page
@@ -312,7 +310,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
 });
 
-Route::get('news/feed', 'App\Http\Controllers\NewsFeetController@index')->name('news.feed');
+Route::get('/', 'App\Http\Controllers\NewsFeetController@index')->name('news.feed');
 Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
 Route::get('customer/Wardrobe', 'App\Http\Controllers\NewsFeetController@Wardrobe')->name('customer.Wardrobe');
 Route::get('vendors/product/{id}', 'App\Http\Controllers\NewsFeetController@vendorsproduct')->name('vendor.product');
@@ -331,6 +329,7 @@ Route::post('/comment/reply', 'App\Http\Controllers\NewsFeetController@reply')
     ->middleware('customer.only')
     ->name('comment.reply');
 Route::delete('/comment/{id}', 'App\Http\Controllers\NewsFeetController@commentdestroy')->name('comment.destroy')->middleware('auth');
+//profile details and other manu url======================
 
 
 
