@@ -17,6 +17,18 @@ class User extends Authenticatable
                 return $this->hasMany(Comment::class, 'user_id');
             }
 
+        public function followers()
+        {
+            return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
+        }
+
+        public function following()
+        {
+            return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id');
+        }
+
+
+
     /**
      * The attributes that are mass assignable.
      *

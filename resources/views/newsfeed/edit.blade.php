@@ -148,7 +148,7 @@
 </style>
 
 <div class="product-review-form">
-  <h2>Update Your Product Review</h2>
+  <h2>Update Your Review</h2>
 
   <form action="{{ route('newsfeed.update', $review->id) }}" method="POST" enctype="multipart/form-data" style="margin-top: 30px;" id="reviewForm">
     @csrf
@@ -158,8 +158,15 @@
     <input type="text" name="name" value="{{ $review->name }}" readonly />
 
     {{-- Product Name --}}
-    <input type="text" name="product_name" value="{{ $review->product_name }}" placeholder="Product Name" required />
+      <select name="product_name" required>
+            <option value="{{ $review->product_name }}" {{ $review->product_name == $review->product_name ? 'selected' : '' }}>
+                {{ $review->product_name }} post
+            </option>
+            <option value="Sport">Sport post</option>
+            <option value="Fustion">Fustion post</option>
+            <option value="Fan">Fan post</option>
 
+    </select>
     {{-- Shop Selection --}}
     <select name="vendor_id" required>
         <option value="">Select Shop</option>

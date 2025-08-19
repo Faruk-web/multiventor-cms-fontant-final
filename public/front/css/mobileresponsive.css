@@ -1,3 +1,26 @@
+    /* Default: দেখাবে সব ডিভাইসে */
+    .full-layer-outer-header {
+        display: block;
+    }
+
+    /* Mobile view (max-width 991px) */
+    @media (max-width: 991px) {
+        .full-layer-outer-header {
+            display: none;
+        }
+    }
+
+    /* Desktop view (default) */
+    .full-layer-mid-header {
+        padding: 35px 0;
+    }
+
+    /* Mobile view (max-width 991px) */
+    @media (max-width: 991px) {
+        .full-layer-mid-header {
+            padding: 10px 0;
+        }
+    }
 
     /* Bottom Navigation */
     .bottom-nav-mobile {
@@ -48,7 +71,7 @@
 /*====================== profile page css code ======================== */
  /* Profile Image + Circle */
     .profile-container {
-      margin-top: 30px;
+      margin-top: -15px;
       position: relative;
       display: inline-block;
     }
@@ -99,8 +122,8 @@
     .tabs a {
       text-decoration: none;
       color: gray;
-      font-size: 16px;
-      margin: 0 3px;
+      font-size: 14px;
+      margin: 0 1px;
       padding-bottom: 10px;
     }
 
@@ -122,15 +145,15 @@
       color: #fff;
     }
 
-    .tab-content {
-      display: none;   /* ডিফল্টে সব হাইড থাকবে */
+    .tab-content-profile {
+      display: none;   
       background: #fff;
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .tab-content.active {
+    .tab-content-profile.active {
       display: block; /* শুধু active টা show হবে */
     }
 

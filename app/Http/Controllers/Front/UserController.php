@@ -18,12 +18,14 @@ class UserController extends Controller
     public function loginRegister() {
         return view('front.users.login_register');
     }
-    public function userprofile() {
+    public function userprofile(User $user) {
         $orders_products =DB::table('orders_products')->pluck('product_id')->unique();
-       $products =DB::table('products')->pluck('id');
+        $products =DB::table('products')->pluck('id');
         $orders = Order::with('orders_products.product')->where('user_id', Auth::id())->get();
-        return view('front.users.profile',compact('orders_products','products','orders'));
+        return view('front.users.profile',compact('orders_products','products','orders','user'));
     }
+
+    
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js    
     public function userRegister(Request $request) {
         if ($request->ajax()) { // if the request is coming via an AJAX call
@@ -323,6 +325,7 @@ class UserController extends Controller
                 'country' => 'required|string|max:100',
                 'mobile'  => 'required|numeric|digits:11',
                 'pincode' => 'required|digits:6',
+                'profile_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // নতুন লাইন
 
             ] /*, [ // Customizing The Error Messages: https://laravel.com/docs/9.x/validation#manual-customizing-the-error-messages
                 // the 'name' HTML attribute of the request (the array key of the $request array) (ATTRIBUTE) => Custom Messages
@@ -335,33 +338,33 @@ class UserController extends Controller
             // echo '<pre>', var_dump($validator->messages()), '</pre>';
             // exit;
 
-            if ($validator->passes()) { // if validation passes (is successful), register (INSERT) the new user into the database `users` table, and log the user in IMMEDIATELY and AUTOMATICALLY and DIRECTLY, and redirect them to the Cart cart.blade.php page
-                // Update user details in `users` table
-                User::where('id', Auth::user()->id)->update([ // Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
-                    'name'    => $data['name'],    // $data['name']       comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'mobile'  => $data['mobile'],  // $data['mobile']     comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'city'    => $data['city'],    // $data['city']       comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'state'   => $data['state'],   // $data['state']      comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'country' => $data['country'], // $data['country']    comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'pincode' => $data['pincode'], // $data['pincode']    comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                    'address' => $data['address'], // $data['address']    comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file
-                ]);
+           if ($validator->passes()) {
+                $updateData = [
+                    'name'    => $data['name'],
+                    'mobile'  => $data['mobile'],
+                    'city'    => $data['city'],
+                    'state'   => $data['state'],
+                    'country' => $data['country'],
+                    'pincode' => $data['pincode'],
+                    'address' => $data['address'],
+                ];
 
-                // Redirect user back with a success message
-                // Here, we return a JSON response because the request is ORIGINALLY submitting an HTML <form> data using an AJAX request
-                return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
+                // যদি profile_logo আপলোড করা হয়
+                if ($request->hasFile('profile_logo')) {
+                    $file = $request->file('profile_logo');
+                    $filename = 'profile_' . Auth::id() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/profile', $filename, 'public'); // storage/app/public/uploads/profile
+                    $updateData['profile_logo'] = 'storage/' . $filePath; // DB-তে path save
+                }
+
+                User::where('id', Auth::id())->update($updateData);
+
+                return response()->json([
                     'type'    => 'success',
-                    // 'url'     => $redirectTo, // redirect user to the Cart cart.blade.php page
-                    'message' => 'Your contact/billing details successfully updated!'
-                ]);
-
-            } else { // if validation fails (is unsuccessful), send the Validation Error Messages
-                // Here, we return a JSON response because the request is ORIGINALLY submitting an HTML <form> data using an AJAX request
-                return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                    'type'   => 'error',
-                    'errors' => $validator->messages() // we'll loop over the Validation Errors Messages array using jQuery to show them in the frontend (Check    $('#accountForm').submit();    in front/js/custom.js)    // Working With Error Messages: https://laravel.com/docs/9.x/validation#working-with-error-messages    
+                    'message' => 'Your profile details successfully updated!',
                 ]);
             }
+
 
         } else { // if it's a 'GET' request, render front/users/user_account.blade.php
             // Fetch all of the world countries from the database table `countries`

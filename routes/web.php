@@ -260,7 +260,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::group(['middleware' => ['auth']], function() {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount');
-        Route::get('user/profile', 'UserController@userprofile');
+        Route::get('user/profile/{user}', 'UserController@userprofile');
         // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
         Route::post('user/update-password', 'UserController@userUpdatePassword');
 
@@ -331,5 +331,7 @@ Route::post('/comment/reply', 'App\Http\Controllers\NewsFeetController@reply')
 Route::delete('/comment/{id}', 'App\Http\Controllers\NewsFeetController@commentdestroy')->name('comment.destroy')->middleware('auth');
 //profile details and other manu url======================
 
+Route::post('/follow/{user}', 'App\Http\Controllers\FollowController@follow')->name('follow');
+Route::delete('/unfollow/{user}', 'App\Http\Controllers\FollowController@unfollow')->name('unfollow');
 
 

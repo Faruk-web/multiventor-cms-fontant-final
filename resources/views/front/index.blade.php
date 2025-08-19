@@ -1,7 +1,5 @@
 {{-- This page is rendered by index() method in Front/IndexController.php --}}
 @extends('front.layout.layout')
-
-
 @section('content')
     <!-- Main-Slider -->
     <div class="default-height ph-item">
@@ -23,10 +21,6 @@
         </div>
     </div>
     <!-- Main-Slider /- -->
-
-
-
-    
     @if (isset($fixBanners[1]['image']))
         <!-- Banner-Layer -->
         <div class="banner-layer">
@@ -40,9 +34,6 @@
         </div>
         <!-- Banner-Layer /- -->    
     @endif
-
-
-
     <!-- Top Collection -->
     <section class="section-maker">
         <div class="container">

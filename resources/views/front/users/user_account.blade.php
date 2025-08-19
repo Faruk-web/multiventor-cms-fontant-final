@@ -154,6 +154,23 @@
                                 {{-- <p id="account-mobile" style="color: red"></p> --}} {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                                 <p id="account-mobile"></p> {{-- this will be used by jQuery to show the Validation Error Messages (Laravel's Validation Error Messages) from the AJAX call response from the server (backend) --}} {{-- The pattern must be like: register-x (e.g. register-mobile, register-email, ... in order for the jQuery loop to work. And x must be identical to the 'name' HTML attributes (e.g. the <input> with the    name='mobile'    HTML attribute must have a <p> with an id HTML attribute    id="register-mobile"    ) so that when the vaildation errors array is sent as a response from backend/server (check $validator->messages()    inside    the method inside the controller) to the AJAX request, they could conveniently/easily be handled by the jQuery $.each() loop. Check front/js/custom.js) --}}
                             </div>
+                            <div class="u-s-m-b-30">
+                            <label for="user-profile-logo">Profile Logo
+                                <span class="astk">*</span>
+                            </label>
+                            <input class="text-field" type="file" id="user-profile-logo" name="profile_logo" accept="image/*">
+                            
+                            {{-- Validation message placeholder (same pattern as mobile input) --}}
+                            <p id="account-profile_logo"></p> {{-- AJAX validation এর জন্য --}}
+                            
+                            {{-- Current Profile Logo Preview --}}
+                            @if(Auth::user()->profile_logo)
+                                <div class="mt-2">
+                                    <img src="{{ asset(Auth::user()->profile_logo) }}" alt="Profile Logo" style="width:100px; height:100px; object-fit:cover; border-radius:50%;">
+                                </div>
+                            @endif
+                        </div>
+
                             <div class="m-b-45">
                                 <button class="button button-outline-secondary w-100">Update</button>
                             </div>
