@@ -11,8 +11,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     // use HasApiTokens, HasFactory, Notifiable;
-    use /* HasApiTokens, */ HasFactory, Notifiable, \Laravel\Passport\HasApiTokens; // Adding the HasApiTokens trait of "Laravel Passport" package (different from Sanctum's one)        // https://laravel.com/docs/9.x/passport#:~:text=add%20the,Laravel%5CPassport%5CHasApiTokens
-
+    // use /* HasApiTokens, */ HasFactory, Notifiable, \Laravel\Passport\HasApiTokens; // Adding the HasApiTokens trait of "Laravel Passport" package (different from Sanctum's one)        // https://laravel.com/docs/9.x/passport#:~:text=add%20the,Laravel%5CPassport%5CHasApiTokens
+    use Notifiable, HasFactory, \Laravel\Passport\HasApiTokens;
         public function comments() {
                 return $this->hasMany(Comment::class, 'user_id');
             }

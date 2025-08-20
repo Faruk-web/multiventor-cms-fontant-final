@@ -11,7 +11,10 @@ class Product extends Model
 {
     use HasFactory;
 
-
+    public function orderProducts()
+        {
+            return $this->hasMany(OrdersProduct::class, 'product_id', 'id');
+        }
 
     // Every 'product' belongs to a 'section'
     public function section() {

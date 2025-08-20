@@ -176,9 +176,16 @@
 
 
 
-    <a href="#" class="nav-item">
+    <a href="{{ route('notifications.index') }}" class="nav-item">
       <i class="fas fa-bell"></i>
-      <span>Alerts</span>
+      @if(Auth::check())
+    <span class="badge">
+        {{ Auth::user()->unreadNotifications->count() }}
+    </span>
+        @else
+            <span class="badge">0</span>
+        @endif
+
     </a>
 
     @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}

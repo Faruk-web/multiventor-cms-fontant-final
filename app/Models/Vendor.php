@@ -21,9 +21,15 @@ class Vendor extends Model
     }
     // Get Vendor's Commission Percentage that they must pay for the Website Owner from `commission` column of `vendors` table    
     public static function getVendorCommission($vendor_id) {
-        $getVendorCommission = Vendor::select('commission')->where('id', $vendor_id)->first()->toArray();
+          // Get vendor row
+    $vendor = Vendor::select('commission')->where('id', $vendor_id)->first();
 
-        return $getVendorCommission['commission'];
+    if (!$vendor) {
+        // যদি vendor না থাকে, default commission return করতে পারেন
+        return 0; // অথবা কোনো default value
+    }
+
+    return $vendor->commission;
     }
 
 }

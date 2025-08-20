@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use App\Events\OrderPlaced;
 use App\Models\Category;
 use App\Models\DeliveryAddress;
 use App\Models\Product;
@@ -1026,7 +1026,6 @@ class ProductsController extends Controller
             // Store the $grand_total in Session to be able to use it wherever we need it later on (for example, it'll be used in front/paypal/paypal.blade.php and front/iyzipay/iyzipay.blade.php)
             Session::put('grand_total', $grand_total); // Storing Data: https://laravel.com/docs/10.x/session#storing-data
 
-
             // INSERT the data we collected INTO the `orders` database table
             $order = new Order; // Create a new Order.php model object (represents the `orders` table)
 
@@ -1049,11 +1048,16 @@ class ProductsController extends Controller
             $order->grand_total      = $grand_total;
 
             $order->save(); // INSERT data INTO the `orders` table
+// Fire event directly
+// $order->load(['orders_products.product', 'user']);
+// event(new \App\Events\OrderPlaced($order));
+// \Log::info('OrderPlaced event fired for order '.$order->id);
+
 
             // Get the last generated `id` of the the last inserted order in the `orders` table (to be able to store it in the `order_id` column in the `orders_products` table)
-            $order_id = DB::getPdo()->lastInsertId();
+            // $order_id = DB::getPdo()->lastInsertId();
 
-
+              $order_id = $order->id;
             // INSERT/Fill in the data of the order in the `orders_products` table (after filling in the `orders` table)
             foreach ($getCartItems as $item) {
                 $cartItem = new OrdersProduct; // Create a new OrdersProduct.php model object (represents the `orders_products` table)
@@ -1098,6 +1102,10 @@ class ProductsController extends Controller
 
                 $cartItem->save(); // INSERT data INTO the `orders_products` table
 
+$order->load(['orders_products', 'user']);
+
+// 4. Fire event
+event(new \App\Events\OrderPlaced($order));
 
                 // Inventory Management - Reduce inventory/stock when an order gets placed
                 // We wrote the Inventory/Stock Management script in TWO places: in the checkout() method in Front/ProductsController.php and in the success() method in Front/PaypalController.php
@@ -1123,7 +1131,22 @@ class ProductsController extends Controller
 
             // Send placing an order confirmation email to the user    
             // Note: We send placing an order confirmation email and SMS to the user right away (immediately) if the order is "COD", but if the order payment method is like PayPal or any other payment gateway, we send the order confirmation email and SMS after the user makes the payment
-            $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
+            // $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
+
+$order = Order::with('orders_products')->find($order_id);
+
+if (!$order) {
+    // যদি order না থাকে
+    return redirect()->back()->with('error', 'Order not found!');
+}
+
+// এখন order আছে, Eloquent instance
+$orderDetails = $order->toArray(); // safe
+
+// অথবা সরাসরি $order ব্যবহার করতে পারেন, array conversion দরকার নেই
+
+
+
 
             if ($data['payment_gateway'] == 'COD') { // if the `payment_gateway` selected by the user is 'COD' (in front/products/checkout.blade.php), we send the placing the order confirmation email and SMS immediately
                 // Sending the Order confirmation email
