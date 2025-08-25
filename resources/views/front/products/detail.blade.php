@@ -101,10 +101,13 @@
                             </a>
                         @endforeach
 
-
-
                     </div>
                     <!-- Product-zoom-area /- -->
+                     @if(isset($productDetails['vendor_id']) && $productDetails['vendor_id'])
+                        <a class="mt-5"href="{{ url('vendors/product', $productDetails['vendor_id']) }}">
+                            <u style="color:#111">Visit Shop</u>
+                        </a>
+                    @endif
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <!-- Product-details -->
@@ -152,8 +155,6 @@
                                 </button>
                             </div>
                         @endif
-
-
 
                         <div class="section-1-title-breadcrumb-rating">
                             <div class="product-title">

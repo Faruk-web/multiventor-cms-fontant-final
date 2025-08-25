@@ -1,10 +1,11 @@
 <?php
 // Getting the 'enabled' sections ONLY and their child categories (using the 'categories' relationship method) which, in turn, include their 'subcategories`
 $sections = \App\Models\Section::sections();
+   $feetsections = \App\Models\Section::where('feet_name', '!=', '0')
+    ->where('feet_name', '!=', '')
+    ->get();
 // dd($sections);
 ?>
-
-
 
 <!-- Header -->
 <header>
@@ -29,9 +30,6 @@ $sections = \App\Models\Section::sections();
             <nav>
                 <ul class="secondary-nav g-nav">
                     <li>
-
-
-
                         <a>
                             {{-- If the user is authenticated/logged in, show 'My Account', if not, show 'Login/Register' --}} 
                             @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}
@@ -53,9 +51,6 @@ $sections = \App\Models\Section::sections();
                                 <i class="far fa-check-circle u-s-m-r-9"></i>
                                 Checkout</a>
                             </li>
-
-
-
                             {{-- If the user is authenticated/logged in, show 'My Account' and 'Logout', if not, show 'Customer Login' and 'Vendor Login' --}} 
                             @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}
                                 <li>
@@ -144,35 +139,38 @@ $sections = \App\Models\Section::sections();
             <div class="row clearfix align-items-center">
                 <div class="col-lg-3 col-md-9 col-sm-6">
                     <div class="brand-logo text-lg-center">
-
-
                         <a href="{{ url('/') }}">
-
-
                             <img src="{{ asset('front/images/main-logo/main-logo.png') }}" alt="Multi-vendor E-commerce Application" class="app-brand-logo">
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-6 u-d-none-lg">
-
-
-
                     {{-- Website Search Form (to search for all website products) --}} 
                     <form class="form-searchbox" action="{{ url('/search-products') }}" method="get">
                         <label class="sr-only" for="search-landscape">Search</label>
                         <input id="search-landscape" type="text" class="text-field" placeholder="Search everything" name="search" @if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) value="{{ $_REQUEST['search'] }}" @endif> {{-- We use the "name" HTML attribute as a key/name for the "value" HTML attribute for submitting the Search Form. Check the "value" HTML attribute too inside the <option> HTML tag down below! --}} {{-- if the user uses the Search Form --}}
                         <div class="select-box-position">
-                            <div class="select-box-wrapper select-hide">
-                                <label class="sr-only" for="select-category">Choose category for search</label>
-                                <select class="select-box" id="select-category" name="section_id">
+                           <div class="select-box-wrapper select-hide">
+                            <label class="sr-only" for="select-category">Choose category for search</label>
+                            <select class="select-box" id="select-category" name="section_id">
+                                <option selected value="">Feet</option>
+                                @foreach ($feetsections as $section)
+                                    <option value="{{ route('category.feed', $section->id) }}">
+                                        {{ $section->feet_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                                    <option selected="selected" value="">All</option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section['id'] }}"  @if (isset($_REQUEST['section_id']) && !empty($_REQUEST['section_id']) && $_REQUEST['section_id'] == $section['id']) selected @endif>{{ $section['name'] }}</option> {{-- the search bar drop-down menu at the top --}} {{-- We use the "value" HTML attribute as a value for the "name" HTML attribute for submitting the Search Form. Check the "name" HTML attribute too inside the <input> HTML tag above there! --}}
-                                    @endforeach
-
-                                </select>
-                            </div>
+                        <script>
+                            // auto redirect when dropdown changes
+                            document.getElementById('select-category').addEventListener('change', function () {
+                                let url = this.value;
+                                if (url) {
+                                    window.location.href = url;
+                                }
+                            });
+                        </script>
                         </div>
                         <button id="btn-search" type="submit" class="button button-primary fas fa-search"></button>
                     </form>
@@ -228,9 +226,6 @@ $sections = \App\Models\Section::sections();
                         <nav>
                             <div class="v-wrapper">
                                 <ul class="v-list animated fadeIn">
-
-
-
                                     @foreach ($sections as $section)
                                         @if (count($section['categories']) > 0) {{-- if the section has child categories, show the section name, but if it doesn't, don't show it --}}
                                             <li class="js-backdrop">

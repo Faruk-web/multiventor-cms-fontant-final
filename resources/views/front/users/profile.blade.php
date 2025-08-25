@@ -113,11 +113,19 @@
         </div>
       </div>
   </section>
-
   @php
-      $looks = \App\Models\Newsfeed::with('likes','comments.user')->where('user_id', Auth::id())->latest()->get();
-    
-  @endphp
+    if(isset($user->id)) {
+        $looks = \App\Models\Newsfeed::with('likes','comments.user')
+                    ->where('user_id', $user->id)
+                    ->latest()
+                    ->get();
+    } else {
+        $looks = \App\Models\Newsfeed::with('likes','comments.user')
+                    ->where('user_id', Auth::id())
+                    ->latest()
+                    ->get();
+    }
+@endphp
  <!-- Tabs -->
   <div class="tabs">
     <a href="javascript:void(0)" class="active" onclick="openTab(event, 'looks')">Looks</a>
@@ -322,27 +330,31 @@
   </div>
 
   <div id="following" class="tab-content-profile">
-    <div class="container" style="text-align: center;">
-     @if(auth()->user()->following->contains($user->id))
-      <!-- <ul>
-          @forelse($user->following as $follow)
-              <li>{{ $follow->name }}</li>
-          @empty
-              <li>Not following anyone yet.</li>
-          @endforelse
-      </ul> -->
-      <form action="{{ route('unfollow', $user->id) }}" method="POST">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="btn btn-danger">Unfollow</button>
-      </form>
-      @else
-          <form action="{{ route('follow', $user->id) }}" method="POST">
-              @csrf
-              <button type="submit" class="btn btn-primary">Follow</button>
-          </form>
-      @endif
-    </div>
+    <div class="container text-center">
+
+    @auth
+        @if(auth()->user()->following->contains($user->id))
+            <form action="{{ route('unfollow', $user->id) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Unfollow</button>
+            </form>
+        @else
+            <form action="{{ route('follow', $user->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary">Follow</button>
+            </form>
+        @endif
+    @else
+        <p>
+            <a href="{{ route('login') }}" class="btn btn-secondary">
+                Login to Follow
+            </a>
+        </p>
+    @endauth
+
+</div>
+
  </div>
   <!-- Script -->
   <script>

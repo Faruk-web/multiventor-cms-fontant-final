@@ -336,7 +336,8 @@ body {
   display: flex; }
 
 .products-slider.owl-carousel .owl-item {
-  display: flex; }
+  /* display: flex;  */
+}
 
 /**
  * Products-Slider (Equal columns height fix)

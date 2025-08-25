@@ -9,7 +9,7 @@ class NewsFeed extends Model
 {
     use HasFactory;
     protected $fillable = [
-            'name', 'product_name', 'vendor_id', 'review', 'tags', 'media_path'
+            'name', 'feet_type_id', 'vendor_id', 'review', 'tags', 'media_path'
         ];
  // Newsfeed has many likes
     public function likes()

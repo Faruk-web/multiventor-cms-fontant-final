@@ -1,6 +1,12 @@
 {{-- This page is accessed from My Account tab in the dropdown menu in the header (in front/layout/header.blade.php). Check userAccount() method in Front/UserController.php --}} 
 @extends('front.layout.layout')
-
+<?php
+// Getting the 'enabled' sections ONLY and their child categories (using the 'categories' relationship method) which, in turn, include their 'subcategories`
+   $feetsections = \App\Models\Section::where('feet_name', '!=', '0')
+    ->where('feet_name', '!=', '')
+    ->get();
+// dd($sections);
+?>
 @section('content')
     <!-- Page Introduction Wrapper -->
     <div class="page-style-a">
@@ -156,15 +162,14 @@
      <input type="hidden" name="user_id" value="{{ $review->user_id }}" readonly />
     {{-- User Name --}}
     <input type="text" name="name" value="{{ $review->name }}" readonly />
-
     {{-- Product Name --}}
-      <select name="product_name" required>
-            <option value="{{ $review->product_name }}" {{ $review->product_name == $review->product_name ? 'selected' : '' }}>
-                {{ $review->product_name }} post
-            </option>
-            <option value="Sport">Sport post</option>
-            <option value="Fustion">Fustion post</option>
-            <option value="Fan">Fan post</option>
+      <select name="feet_type_id" required>
+            <option value="">Select Shop</option>
+              @foreach($feetsections as $item)
+                  <option value="{{ $item->id }}" {{ $review->feet_type_id == $item->id ? 'selected' : '' }}>
+                    {{ $item->feet_name }}
+                </option>
+              @endforeach
 
     </select>
     {{-- Shop Selection --}}

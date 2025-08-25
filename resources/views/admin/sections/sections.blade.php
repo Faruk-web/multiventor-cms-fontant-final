@@ -35,6 +35,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
+                                            <th>Feet Name</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -44,6 +45,7 @@
                                             <tr>
                                                 <td>{{ $section['id'] }}</td>
                                                 <td>{{ $section['name'] }}</td>
+                                                <td>{{ $section['feet_name'] }}</td>
                                                 <td>
                                                     @if ($section['status'] == 1)
                                                         <a class="updateSectionStatus" id="section-{{ $section['id'] }}" section_id="{{ $section['id'] }}" href="javascript:void(0)"> {{-- Using HTML Custom Attributes. Check admin/js/custom.js --}}

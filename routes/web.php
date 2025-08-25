@@ -317,8 +317,12 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 });
 
 Route::get('/', 'App\Http\Controllers\NewsFeetController@index')->name('news.feed');
+Route::get('/category/feet/{id}', 'App\Http\Controllers\NewsFeetController@categoryfeet')->name('category.feed');
 Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
 Route::get('customer/Wardrobe', 'App\Http\Controllers\NewsFeetController@Wardrobe')->name('customer.Wardrobe');
+// web.php
+Route::get('/customer/{id}', 'App\Http\Controllers\Front\UserController@profileshow')->name('customer.profileshow');
+
 Route::get('vendors/product/{id}', 'App\Http\Controllers\NewsFeetController@vendorsproduct')->name('vendor.product');
 Route::post('/review/store', 'App\Http\Controllers\NewsFeetController@store')->name('review.store');
 Route::get('newsfeed/{id}/edit', 'App\Http\Controllers\NewsFeetController@edit')->name('newsfeed.edit');

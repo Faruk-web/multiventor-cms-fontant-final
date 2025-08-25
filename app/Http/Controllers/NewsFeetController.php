@@ -10,6 +10,7 @@ use App\Models\Like;
 use App\Models\Love;
 use App\Models\Comment;
 use App\Models\Order;
+use App\Models\Section;
 use App\Models\OrdersProduct;
 use App\Models\Admin;
 use App\Models\VendorsBusinessDetail;
@@ -20,9 +21,16 @@ class NewsFeetController extends Controller
     // Show newsfeed index
     public function index()
     {
-        
         // $newsfeed = DB::table('news_feeds')->distinct()->get();
         $newsfeed = Newsfeed::with('likes','comments.user')->latest()->get();
+        $allProducts = Product::pluck('product_name', 'id')->toArray();
+        return view('newsfeed.index',compact('allProducts','newsfeed'));
+    }
+    
+    public function categoryfeet($id)
+    {
+        $section = Section::findOrFail($id);
+        $newsfeed = Newsfeed::with('likes','comments.user')->where('feet_type_id',$section->id)->latest()->get();
         $allProducts = Product::pluck('product_name', 'id')->toArray();
         return view('newsfeed.index',compact('allProducts','newsfeed'));
     }
@@ -160,7 +168,7 @@ public function commentdestroy($id)
 public function store(Request $request)
 {
     $request->validate([
-        'product_name' => 'required|string|max:255',
+        'feet_type_id' => 'required|integer',
         'user_id' => 'required|integer',
         'vendor_id' => 'required|integer',
         'tags' => 'nullable|array',
@@ -196,7 +204,7 @@ public function store(Request $request)
     // Save the review
     NewsFeed::create([
         'name' => $request->name,
-        'product_name' => $request->product_name,
+        'feet_type_id' => $request->feet_type_id,
         'user_id' => $request->user_id,
         'vendor_id' => $request->vendor_id,
         'tags' => json_encode($request->tags),
@@ -218,7 +226,7 @@ public function store(Request $request)
     public function update(Request $request, $id)
 {
     $request->validate([
-        'product_name' => 'required|string|max:255',
+        'feet_type_id' => 'required|integer',
         'vendor_id' => 'required|integer',
         'tags' => 'nullable|array',
         'review' => 'required|string',
@@ -241,7 +249,7 @@ public function store(Request $request)
     }
 
     $review->update([
-        'product_name' => $request->product_name,
+        'feet_type_id' => $request->feet_type_id,
         'user_id' => $request->user_id,
         'vendor_id' => $request->vendor_id,
         'tags' => json_encode($request->tags),

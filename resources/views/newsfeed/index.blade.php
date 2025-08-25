@@ -110,12 +110,13 @@
 <div class="container">
   @foreach($newsfeed as $item)
     <div class="post" data-viewed="false">
-      
       {{-- Header --}}
       <div class="post-header d-flex justify-between align-center">
         <div class="d-flex align-center">
           <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
+          <a href="{{ route('customer.profileshow', $item->user_id) }}">
           <div class="username">{{ $item->name }}</div>
+             </a>
         </div>
 
         @if(auth()->id() === $item->user_id)
