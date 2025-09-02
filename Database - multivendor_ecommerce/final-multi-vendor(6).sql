@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2025 at 01:33 PM
+-- Generation Time: Sep 02, 2025 at 11:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -141,7 +141,9 @@ INSERT INTO `carts` (`id`, `session_id`, `user_id`, `product_id`, `size`, `quant
 (17, '5088d2b9d971513dc3fbf2b98f3dfb97', 0, 4, 'Small', 3, '2022-12-06 20:59:02', '2022-12-06 23:05:50'),
 (42, '5617d343aa7e9b62d5475c899ca3dae3', 1, 5, 'Medium', 1, '2023-03-22 22:24:40', '2023-03-22 23:53:31'),
 (67, 'f945daeb6a96dd25613f5da29ec2b2f1', 0, 2, 'Medium', 1, '2023-04-08 13:29:51', '2023-04-08 13:29:51'),
-(84, '353379f27d45f77a258c3ab7594f84d3', 0, 1, '64GB-4GB', 1, '2024-08-03 20:13:11', '2024-08-03 20:13:11');
+(84, '353379f27d45f77a258c3ab7594f84d3', 0, 1, '64GB-4GB', 1, '2024-08-03 20:13:11', '2024-08-03 20:13:11'),
+(92, '9ecadc6be5b8fff6833b43c6b680b97f', 0, 5, 'Medium', 1, '2025-08-26 02:54:47', '2025-08-26 02:54:47'),
+(93, 'de6255b309216c68b421a15758ccd986', 2, 1, '64GB-4GB', 1, '2025-09-02 03:20:43', '2025-09-02 03:20:43');
 
 -- --------------------------------------------------------
 
@@ -903,7 +905,10 @@ CREATE TABLE `followers` (
 --
 
 INSERT INTO `followers` (`id`, `follower_id`, `following_id`, `created_at`, `updated_at`) VALUES
-(5, 3, 2, NULL, NULL);
+(5, 3, 2, NULL, NULL),
+(7, 3, 2, NULL, NULL),
+(8, 3, 3, NULL, NULL),
+(9, 2, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1059,7 +1064,7 @@ INSERT INTO `newsletter_subscribers` (`id`, `email`, `status`, `created_at`, `up
 CREATE TABLE `news_feeds` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `product_name` varchar(255) NOT NULL,
+  `feet_type_id` int(11) DEFAULT NULL,
   `user_id` bigint(10) UNSIGNED NOT NULL,
   `vendor_id` bigint(20) UNSIGNED NOT NULL,
   `review` text NOT NULL,
@@ -1073,9 +1078,11 @@ CREATE TABLE `news_feeds` (
 -- Dumping data for table `news_feeds`
 --
 
-INSERT INTO `news_feeds` (`id`, `name`, `product_name`, `user_id`, `vendor_id`, `review`, `tags`, `media_path`, `created_at`, `updated_at`) VALUES
-(3, 'Ariful Islam omar', 'Sport', 2, 1, 'dgfdsgg dfdsggd', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/68870592a9fcd.jpg', '2025-07-27 23:07:30', '2025-07-28 22:51:47'),
-(4, 'Ariful Islam omar', 'Fan', 2, 1, 'i am cutton', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/68870592a9fcd.jpg', '2025-07-27 23:07:30', '2025-07-28 22:51:47');
+INSERT INTO `news_feeds` (`id`, `name`, `feet_type_id`, `user_id`, `vendor_id`, `review`, `tags`, `media_path`, `created_at`, `updated_at`) VALUES
+(3, 'Ariful Islam omar', 9, 2, 1, 'Yes nice photo shot', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/68936fad38b17.jpg', '2025-07-27 23:07:30', '2025-08-25 02:46:43'),
+(4, 'Ariful Islam omar', 8, 3, 1, 'i am cutton', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/689371e2d9a96.jpg', '2025-07-27 23:07:30', '2025-08-25 02:46:23'),
+(5, 'Ariful Islam omar', 8, 2, 1, 'i am cutton', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/689371e2d9a96.jpg', '2025-07-27 23:07:30', '2025-08-25 02:46:23'),
+(6, 'Ariful Islam omar', 9, 3, 1, 'Yes nice photo shot', '[\"1\",\"3\",\"6\"]', 'uploads/reviews/68936fad38b17.jpg', '2025-07-27 23:07:30', '2025-08-25 02:46:43');
 
 -- --------------------------------------------------------
 
@@ -1099,6 +1106,8 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('4326b868-7225-4706-b4c0-f9e8ff9d8e89', 'App\\Notifications\\OrderNotification', 'App\\Models\\User', 3, '{\"message\":\"Ibrahim Mohamed\",\"order_id\":131,\"product_name\":\"Unknown Product\"}', '2025-08-24 05:07:14', '2025-08-24 05:06:24', '2025-08-24 05:07:14'),
+('658a71fb-1565-48f3-9c4c-83f0ccdf74d7', 'App\\Notifications\\OrderNotification', 'App\\Models\\User', 3, '{\"message\":\"Ibrahim Mohamed\",\"order_id\":131,\"product_name\":\"Unknown Product\"}', '2025-08-24 05:07:14', '2025-08-24 05:06:24', '2025-08-24 05:07:14'),
 ('ceb5f648-11e6-4691-9b16-2f538c2d92fa', 'App\\Notifications\\OrderNotification', 'App\\Models\\User', 3, '{\"message\":\"Ibrahim Mohamed\",\"order_id\":129,\"product_name\":\"Unknown Product\"}', '2025-08-20 05:32:17', '2025-08-20 05:16:06', '2025-08-20 05:32:17'),
 ('d83d20c2-50a7-4f22-8c67-8fdeb05896fc', 'App\\Notifications\\OrderNotification', 'App\\Models\\User', 3, '{\"message\":\"Ibrahim Mohamed\",\"order_id\":130,\"product_name\":\"Unknown Product\"}', '2025-08-20 05:32:17', '2025-08-20 05:25:58', '2025-08-20 05:32:17');
 
@@ -1313,7 +1322,8 @@ INSERT INTO `orders` (`id`, `user_id`, `name`, `address`, `city`, `state`, `coun
 (117, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 0.00, NULL, NULL, 'New', 'COD', 'COD', 2000.00, NULL, NULL, 0, '2025-08-20 04:53:39', '2025-08-20 04:53:39'),
 (118, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 0.00, NULL, NULL, 'New', 'COD', 'COD', 1000.00, NULL, NULL, 0, '2025-08-20 04:55:45', '2025-08-20 04:55:45'),
 (129, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 100.00, NULL, NULL, 'New', 'COD', 'COD', 820.00, NULL, NULL, 0, '2025-08-20 05:16:04', '2025-08-20 05:16:04'),
-(130, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 100.00, NULL, NULL, 'New', 'COD', 'COD', 910.00, NULL, NULL, 0, '2025-08-20 05:25:58', '2025-08-20 05:25:58');
+(130, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 100.00, NULL, NULL, 'New', 'COD', 'COD', 910.00, NULL, NULL, 0, '2025-08-20 05:25:58', '2025-08-20 05:25:58'),
+(131, 2, 'Ibrahim', '16 El Fath St.', 'Cairo', 'Cairo', 'Egypt', '141001', '0119578625', 'customer@gmail.com', 100.00, NULL, NULL, 'New', 'COD', 'COD', 820.00, NULL, NULL, 0, '2025-08-24 05:06:22', '2025-08-24 05:06:22');
 
 -- --------------------------------------------------------
 
@@ -1473,7 +1483,8 @@ INSERT INTO `orders_products` (`id`, `order_id`, `user_id`, `vendor_id`, `admin_
 (91, 117, 2, 7, 2, 8, 'BT501', 'Blue T-Shirt', 'Blue', 'Small', 1000.00, 2, NULL, NULL, NULL, 0, '2025-08-20 04:53:39', '2025-08-20 04:53:39'),
 (92, 118, 2, 2, 1, 4, 'BT01', 'Blue T-Shirt', 'Blue', 'Small', 1000.00, 1, NULL, NULL, NULL, 0, '2025-08-20 04:55:45', '2025-08-20 04:55:45'),
 (96, 129, 2, 3, 1, 5, 'GT01', 'Green T-Shirt', 'Green', 'Small', 720.00, 1, NULL, NULL, NULL, 0, '2025-08-20 05:16:04', '2025-08-20 05:16:04'),
-(97, 130, 2, 3, 1, 5, 'GT01', 'Green T-Shirt', 'Green', 'Medium', 810.00, 1, NULL, NULL, NULL, 0, '2025-08-20 05:25:58', '2025-08-20 05:25:58');
+(97, 130, 2, 3, 1, 5, 'GT01', 'Green T-Shirt', 'Green', 'Medium', 810.00, 1, NULL, NULL, NULL, 0, '2025-08-20 05:25:58', '2025-08-20 05:25:58'),
+(98, 131, 2, 3, 1, 5, 'GT01', 'Green T-Shirt', 'Green', 'Small', 720.00, 1, NULL, NULL, NULL, 0, '2025-08-24 05:06:22', '2025-08-24 05:06:22');
 
 -- --------------------------------------------------------
 
@@ -1999,7 +2010,7 @@ INSERT INTO `products_attributes` (`id`, `product_id`, `size`, `price`, `stock`,
 (8, 1, '128GB-4GB', 18000.00, 148, 'RN111284', 1, '2022-10-10 15:27:56', '2023-12-18 22:08:58'),
 (9, 7, '64GB-4GB', 12000.00, 100, 'RT001644', 1, '2022-10-10 17:21:27', '2022-10-10 17:21:27'),
 (10, 4, 'Small', 1000.00, 72, 'BT01-S', 1, '2022-10-10 21:36:38', '2025-08-20 04:55:45'),
-(11, 5, 'Small', 800.00, 1, 'GT01-S', 1, '2022-10-10 21:38:12', '2025-08-20 05:16:06'),
+(11, 5, 'Small', 800.00, 0, 'GT01-S', 1, '2022-10-10 21:38:12', '2025-08-24 05:06:24'),
 (12, 5, 'Medium', 900.00, 3, 'GT01-M', 1, '2022-10-10 21:39:45', '2025-08-20 05:25:58'),
 (13, 6, 'Small', 2000.00, 2, 'BS01-S', 1, '2022-10-10 21:40:42', '2023-06-09 13:08:27'),
 (14, 6, 'Medium', 3000.00, 10, 'BS01-M', 1, '2022-10-31 21:59:57', '2023-06-09 13:08:27'),
@@ -2302,7 +2313,17 @@ INSERT INTO `recently_viewed_products` (`id`, `product_id`, `session_id`, `creat
 (155, 10, 'c074b61f13b4eb5133c865e496dc27bc', NULL, NULL),
 (156, 4, 'c074b61f13b4eb5133c865e496dc27bc', NULL, NULL),
 (157, 8, 'c074b61f13b4eb5133c865e496dc27bc', NULL, NULL),
-(158, 5, 'c074b61f13b4eb5133c865e496dc27bc', NULL, NULL);
+(158, 5, 'c074b61f13b4eb5133c865e496dc27bc', NULL, NULL),
+(159, 10, '9036cd21c728e430c7eac0e9935481d1', NULL, NULL),
+(160, 5, '9036cd21c728e430c7eac0e9935481d1', NULL, NULL),
+(161, 1, 'e897e76e4f958615fdb176d0dbd342e4', NULL, NULL),
+(162, 10, 'e897e76e4f958615fdb176d0dbd342e4', NULL, NULL),
+(163, 9, 'e897e76e4f958615fdb176d0dbd342e4', NULL, NULL),
+(164, 6, '9ecadc6be5b8fff6833b43c6b680b97f', NULL, NULL),
+(165, 10, '9ecadc6be5b8fff6833b43c6b680b97f', NULL, NULL),
+(166, 5, '9ecadc6be5b8fff6833b43c6b680b97f', NULL, NULL),
+(167, 6, 'de6255b309216c68b421a15758ccd986', NULL, NULL),
+(168, 1, 'de6255b309216c68b421a15758ccd986', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2313,6 +2334,7 @@ INSERT INTO `recently_viewed_products` (`id`, `product_id`, `session_id`, `creat
 CREATE TABLE `sections` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
+  `feet_name` varchar(40) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -2322,11 +2344,14 @@ CREATE TABLE `sections` (
 -- Dumping data for table `sections`
 --
 
-INSERT INTO `sections` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Clothing', 1, NULL, '2022-09-22 19:28:50'),
-(2, 'Electronics', 1, NULL, '2022-09-22 18:38:47'),
-(4, 'Appliances', 1, NULL, NULL),
-(6, 'Computers', 1, '2022-08-19 22:27:04', '2022-09-22 18:51:54');
+INSERT INTO `sections` (`id`, `name`, `feet_name`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'clothing', '0', 1, NULL, '2025-08-25 00:28:04'),
+(2, 'Electronics', '0', 1, NULL, '2022-09-22 18:38:47'),
+(4, 'Appliances', '0', 1, NULL, NULL),
+(6, 'Computers', '0', 1, '2022-08-19 22:27:04', '2025-08-25 00:47:34'),
+(7, 'Sports', 'Sports', 1, '2025-08-25 00:53:27', '2025-08-25 00:58:17'),
+(8, 'Fustion', 'Fustion', 1, '2025-08-25 00:58:39', '2025-08-25 00:58:39'),
+(9, 'Style', 'Style', 1, '2025-08-25 00:59:11', '2025-08-25 00:59:11');
 
 -- --------------------------------------------------------
 
@@ -2615,7 +2640,7 @@ CREATE TABLE `users` (
   `country` varchar(255) DEFAULT NULL,
   `pincode` varchar(255) DEFAULT NULL,
   `mobile` varchar(255) DEFAULT NULL,
-  `profile_logo` varchar(100) DEFAULT NULL,
+  `profile_photo` varchar(100) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
@@ -2630,9 +2655,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `is_admin`, `name`, `address`, `city`, `state`, `country`, `pincode`, `mobile`, `profile_logo`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `access_token`, `created_at`, `updated_at`) VALUES
+INSERT INTO `users` (`id`, `is_admin`, `name`, `address`, `city`, `state`, `country`, `pincode`, `mobile`, `profile_photo`, `email`, `email_verified_at`, `password`, `status`, `remember_token`, `access_token`, `created_at`, `updated_at`) VALUES
 (1, NULL, 'Ramy Morsy', NULL, NULL, NULL, NULL, NULL, '9650000000', NULL, 'ramy@yopmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-09 21:24:54', '2022-11-09 21:24:54'),
-(2, NULL, 'Ibrahim Mohamed', '16 El Fath St.', 'Cairo', 'Great Cairo', 'Colombia', '141001', '01195786255', NULL, 'customer@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 21:52:20', '2025-08-19 02:10:41'),
+(2, NULL, 'Ibrahim Mohamed', '16 El Fath St.', 'Cairo', 'Great Cairo', 'Colombia', '141001', '01195786255', '1756801878.jpg', 'customer@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 21:52:20', '2025-09-02 02:31:18'),
 (3, NULL, 'Fouad Yasser', NULL, NULL, NULL, NULL, NULL, '01254873526', NULL, 'fouad@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 1, NULL, NULL, '2022-11-10 23:28:20', '2022-11-10 23:28:20'),
 (4, NULL, 'Adel Ramez', NULL, NULL, NULL, NULL, NULL, '01052347854', NULL, 'adel@gmail.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:10:24', '2023-01-06 21:52:09'),
 (5, NULL, 'Fayez Fathy', NULL, NULL, NULL, NULL, NULL, '01152006900', NULL, 'fayez@yahoo.com', NULL, '$2a$12$vQaYV79NotkYJAtlE5e7OujpAMQLkBMq/wDrz2hm8hh.8EWSuS9uS', 0, NULL, NULL, '2022-11-14 18:11:46', '2022-11-14 18:11:46'),
@@ -3053,7 +3078,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -3101,7 +3126,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `likes`
@@ -3131,25 +3156,31 @@ ALTER TABLE `newsletter_subscribers`
 -- AUTO_INCREMENT for table `news_feeds`
 --
 ALTER TABLE `news_feeds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `orders_products`
 --
 ALTER TABLE `orders_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT for table `recently_viewed_products`
 --
 ALTER TABLE `recently_viewed_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
+
+--
+-- AUTO_INCREMENT for table `sections`
+--
+ALTER TABLE `sections`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `users`
