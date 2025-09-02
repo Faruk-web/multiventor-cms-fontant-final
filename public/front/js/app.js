@@ -133,6 +133,12 @@ $(function () {
         $('#mini-cart-close').on('click', function () {
             $('.mini-cart-wrapper').removeClass('mini-cart-open');
         });
+         $('#mini-cart-triggerr').on('click', function () {
+            $('.mobile-cart').addClass('mini-cart-open');
+        });
+        $('.ion-md-close').on('click', function () {
+            $('.mobile-cart').removeClass('mini-cart-open');
+        });
     };
 
     /**

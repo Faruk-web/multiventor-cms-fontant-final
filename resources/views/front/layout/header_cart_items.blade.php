@@ -2,7 +2,7 @@
 
 
 <!-- Mini Cart -->
-<div class="mini-cart-wrapper">
+<div class="mini-cart-wrapper mobile-cart">
     <div class="mini-cart">
         <div class="mini-cart-header">
             YOUR CART

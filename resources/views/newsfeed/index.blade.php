@@ -29,15 +29,6 @@
     color: #007bff;
   }
 
-    .post {
-      background: #d7d7d770;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-      margin-top: 40px;
-      overflow: hidden;
-      position: relative;
-    }
     .post-img {
       width: 100%;
       height: 300px;
@@ -180,7 +171,7 @@
       </div>
 
       {{-- 🔁 Comment Section For This Post --}}
-      <div class="newsfeed-box" style="margin-top: 15px; border: 1px solid #ccc; padding: 15px;">
+      <div class="newsfeed-box" style="margin-top: 15px; padding: 15px;">
         {{-- 🟡 Toggle Button --}}
         <div class="action-btn comment-btn" onclick="toggleCommentBox({{ $item->id }})" style="cursor: pointer; color: #007bff;">
           <i class="ion ion-md-chatbubbles"></i>

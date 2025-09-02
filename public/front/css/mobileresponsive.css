@@ -21,7 +21,17 @@
             padding: 10px 0;
         }
     }
+    /* Default: visible hobe */
+    .dekstop-d-none-lg {
+        display: block;
+    }
 
+    /* Large (Desktop) view e hide hobe */
+    @media (min-width: 992px) {
+        .dekstop-d-none-lg {
+            display: none !important;
+        }
+    }
     /* Bottom Navigation */
     .bottom-nav-mobile {
       position: fixed;
@@ -157,12 +167,12 @@
       display: block; /* শুধু active টা show হবে */
     }
 
-    .post {
+    /* .post {
       margin-bottom: 15px;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 6px;
-    }
+    } */
     /*====================== newsfeed page er css code========================*/
       .post-header {
     display: flex;
@@ -191,11 +201,11 @@
   }
 
     .post {
-      background: #d7d7d770;
+      /* background: #d7d7d770; */
       border-radius: 10px;
       margin-bottom: 7px;
       box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-      margin-top: 4px;
+      margin-top: 30px;
       overflow: hidden;
       position: relative;
     }

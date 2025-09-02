@@ -6,9 +6,69 @@ $sections = \App\Models\Section::sections();
     ->get();
 // dd($sections);
 ?>
+<style>
+/* Mobile header fixed ek line */
 
+@media (max-width: 991px) {
+    .dekstop-d-none-lg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 21px 25px;
+    }
+
+    .dekstop-d-none-lg .full-layer .container .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap; /* ek line */
+    }
+
+    .dekstop-d-none-lg .v-menu {
+        flex: 0 0 auto;
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .dekstop-d-none-lg .form-searchbox {
+        flex: 1; /* majkhane search box stretch hobe */
+        display: flex;
+        align-items: center;
+        margin: 0 10px;
+    }
+
+    .dekstop-d-none-lg .form-searchbox input.text-field {
+        width: 100%;
+        height: 34px;
+        font-size: 13px;
+        padding: 0 8px;
+    }
+
+    .dekstop-d-none-lg .form-searchbox button {
+        height: 34px;
+        margin-left: 5px;
+    }
+
+    .dekstop-d-none-lg .mid-nav.g-nav {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* body padding so content overlap na hoy */
+    body {
+        padding-top: 60px;
+    }
+}
+
+</style>
 <!-- Header -->
-<header>
+<header class="u-d-none-lg">
     <!-- Top-Header -->
     <div class="full-layer-outer-header">
         <div class="container clearfix">
@@ -98,9 +158,6 @@ $sections = \App\Models\Section::sections();
                                     </a>
                                 </li>
                             @endif
-
-
-
                         </ul>
                     </li>
                     <li>
@@ -152,7 +209,7 @@ $sections = \App\Models\Section::sections();
                         <div class="select-box-position">
                            <div class="select-box-wrapper select-hide">
                             <label class="sr-only" for="select-category">Choose category for search</label>
-                            <select class="select-box" id="select-category" name="section_id">
+                            <select class="select-box" id="select-category-dekstop" name="section_id">
                                 <option selected value="">Feet</option>
                                 @foreach ($feetsections as $section)
                                     <option value="{{ route('category.feed', $section->id) }}">
@@ -161,10 +218,9 @@ $sections = \App\Models\Section::sections();
                                 @endforeach
                             </select>
                         </div>
-
                         <script>
                             // auto redirect when dropdown changes
-                            document.getElementById('select-category').addEventListener('change', function () {
+                            document.getElementById('select-category-dekstop').addEventListener('change', function () {
                                 let url = this.value;
                                 if (url) {
                                     window.location.href = url;
@@ -352,3 +408,63 @@ $sections = \App\Models\Section::sections();
     <!-- Bottom-Header /- -->
 </header>
 <!-- Header /- -->
+
+<header class="dekstop-d-none-lg">
+    <!-- Mini Cart Widget -->
+    <div id="appendHeaderCartItems"> {{-- We created the CSS class 'appendHeaderCartItems' to use it in front/js/custom.js to update the total cart items via AJAX in the Mini Cart Wedget, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred --}}
+        @include('front.layout.header_cart_items')
+    </div>
+    <!-- Mini Cart Widget /- -->
+    <!-- Bottom-Header -->
+    <div class="full-layer">
+        <div class="container">
+            <div class="row">
+                        <b>LOOKSBEE</b>
+                    {{-- Website Search Form (to search for all website products) --}} 
+                    <form class="form-searchbox" action="{{ url('/search-products') }}" method="get">
+                        <label class="sr-only" for="search-landscape">Search</label>
+                        <input id="search-landscape" type="text" class="text-field" placeholder="Search" name="search" @if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) value="{{ $_REQUEST['search'] }}" @endif> {{-- We use the "name" HTML attribute as a key/name for the "value" HTML attribute for submitting the Search Form. Check the "value" HTML attribute too inside the <option> HTML tag down below! --}} {{-- if the user uses the Search Form --}}
+                        <div class="select-box-position">
+                           <div class="select-box-wrapper select-hide">
+                            <label class="sr-only" for="select-category">Choose category for search</label>
+                            <select class="select-box" id="select-category" name="section_id">
+                                <option selected value="">Feet</option>
+                                @foreach ($feetsections as $section)
+                                    <option value="{{ route('category.feed', $section->id) }}">
+                                        {{ $section->feet_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <script>
+                            // auto redirect when dropdown changes
+                            document.getElementById('select-category').addEventListener('change', function () {
+                                let url = this.value;
+                                if (url) {
+                                    window.location.href = url;
+                                }
+                            });
+                        </script>
+                        </div>
+                        <button id="btn-search" type="submit" class="button button-primary fas fa-search"></button>
+                    </form>
+
+                    @php
+                        // dd($_GET);
+                    @endphp
+
+                    <nav>
+                        <ul class="mid-nav g-nav">
+                            <li>
+                                <a id="mini-cart-triggerr">
+                                <i class="ion ion-md-basket"></i>
+                                <span class="item-counter totalCartItems">{{ totalCartItems() }}</span> {{-- totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file --}} {{-- We created the CSS class 'totalCartItems' to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred --}}
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom-Header /- -->
+</header>

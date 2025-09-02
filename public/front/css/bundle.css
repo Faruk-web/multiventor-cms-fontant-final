@@ -1696,7 +1696,7 @@ background: linear-gradient(90deg, rgba(255, 249, 181, 1) 0%, rgba(87, 199, 133,
 
 /* 7.2 Mid-Header */
 .full-layer-mid-header {
-background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+/* background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%); */
   padding: 35px 0; }
   .full-layer-mid-header .row {
     position: relative; }
@@ -3550,6 +3550,6 @@ background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1
   .mid-nav > li {
     margin-left: 0; }
   .item-counter {
-    left: 90px;
-    top: 8px; } }
+    left: 8px;
+    top: -15px; } }
 
