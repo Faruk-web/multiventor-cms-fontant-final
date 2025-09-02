@@ -419,7 +419,7 @@ $sections = \App\Models\Section::sections();
     <div class="full-layer">
         <div class="container">
             <div class="row">
-                        <b>LOOKSBEE</b>
+                     <b> <a href="{{ url('/') }}">  LOOKSBEE</a></b>
                     {{-- Website Search Form (to search for all website products) --}} 
                     <form class="form-searchbox" action="{{ url('/search-products') }}" method="get">
                         <label class="sr-only" for="search-landscape">Search</label>

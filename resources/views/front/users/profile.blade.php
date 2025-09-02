@@ -6,7 +6,9 @@
 .fan-page {
     margin-left: 782px;
 }
-
+ .profile-container:hover .upload-icon {
+        background: #145db2; /* hover color */
+    }
 /* Mobile view (max-width 991px) */
 @media (max-width: 991px) {
     .fan-page {
@@ -20,10 +22,28 @@
         <div class="row" style="text-align: center;">
           <div class="col-lg-2">
           <!-- Profile Image -->
-            <div class="profile-container">
-              <img src="https://i.ibb.co/ZYW3VTp/brown-brim.png" alt="Profile Picture" class="profile-pic">
-              <div class="circle-progress"></div>
-            </div>
+            <div class="profile-container" style="position: relative; display: inline-block;">
+              {{-- Profile Photo --}}
+              <img src="{{ $user->profile_photo 
+                          ? asset('uploads/profile/' . $user->profile_photo) 
+                          : 'https://i.ibb.co/ZYW3VTp/brown-brim.png' }}" 
+                  alt="Profile Picture" 
+                  class="profile-pic" 
+                  style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+
+              {{-- Update Icon (overlay) --}}
+              <form action="{{ route('profile.update.photo', $user->id) }}" method="POST" enctype="multipart/form-data" id="photoForm">
+                  @csrf
+                  <label for="profile_photo" class="upload-icon"
+                        style="position: absolute; bottom: 10px; right: 10px; 
+                                background: #1877f2; color: #fff; border-radius: 50%; 
+                                padding: 8px; cursor: pointer; display:flex; align-items:center; justify-content:center;">
+                      <i class="fas fa-camera"></i> {{-- FontAwesome icon --}}
+                  </label>
+                  <input type="file" name="profile_photo" id="profile_photo" style="display: none;" onchange="document.getElementById('photoForm').submit();">
+              </form>
+          </div>
+
           </div>
           <div class="col-lg-2">
           <!-- Info Section -->
@@ -144,22 +164,31 @@
           {{-- Header --}}
           <div class="post-header d-flex justify-between align-center">
             <div class="d-flex align-center">
-              <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
+              <img src="{{ $user->profile_photo 
+                          ? asset('uploads/profile/' . $user->profile_photo) 
+                          : 'https://i.ibb.co/ZYW3VTp/brown-brim.png' }}"  alt="avatar">
               <div class="username">{{ $item->name }}</div>
             </div>
 
             @if(auth()->id() === $item->user_id)
-              <div class="header-actions">
-                <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </a>
-                <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </form>
+              <div class="header-actions" style="position: relative; display: inline-block;">
+                  {{-- Three dots icon --}}
+                  <span class="dots-icon" style="cursor: pointer; font-size: 18px;" onclick="toggleActions({{ $item->id }})">
+                      &#8230; {{-- HTML entity for ... --}}
+                  </span>
+                  {{-- Hidden edit/delete icons --}}
+                  <div id="actions-{{ $item->id }}" style="display: none; position: absolute; top: 20px; right: 0; background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px; z-index: 100;">
+                      <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit" >
+                          <i class="fas fa-edit" style="margin-left: 6px;"></i>
+                      </a>
+                      <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
+                              <i class="fas fa-trash-alt"></i>
+                          </button>
+                      </form>
+                  </div>
               </div>
             @endif
           </div>
@@ -294,8 +323,8 @@
                         $productUrl = url('product/' . $product->id);
                         $discountPrice = \App\Models\Product::getDiscountPrice($product->id);
                     @endphp
-
-                    <div class="col-md-3 mb-4">
+                    <!-- <div class="col-4 mb-4"> -->
+                    <div class="col-md-4 mb-4">
                         <div class="card h-100">
                             <a href="{{ $productUrl }}">
                                 <img src="{{ asset($imagePath) }}" class="card-img-top" alt="{{ $product->product_name }}">
@@ -324,8 +353,20 @@
 </div>
   <div id="fan" class="tab-content-profile">
     <div class="container">
-      <div class="post">⭐ Fan Post 1</div>
-      <div class="post">⭐ Fan Post 2</div>
+       @forelse($user->followers as $follower)
+            <div class="post mb-2 p-2 border rounded">
+                <div class="d-flex align-items-center">
+                    <img src="https://randomuser.me/api/portraits/men/10.jpg" 
+                         alt="{{ $follower->name }}" 
+                         width="40" height="40" class="rounded-circle me-2">
+                    <span style="margin-left:12px">{{ $follower->name }}</span>
+                </div>
+            </div>
+        @empty
+            <div class="post p-2">
+                এখনও কোনো ফলোয়ার নেই 🙂
+            </div>
+        @endforelse
     </div>
   </div>
 
@@ -486,6 +527,7 @@ function shareToFacebook(button) {
   window.open(shareUrl, '_blank', 'width=600,height=400');
 }
 </script>
+
 @endsection
 
 @endsection

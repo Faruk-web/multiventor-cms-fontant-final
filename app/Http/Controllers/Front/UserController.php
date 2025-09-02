@@ -34,7 +34,32 @@ class UserController extends Controller
         return view('front.users.profile',compact('orders_products','products','orders','user'));
     }
 
-    
+    public function updatePhoto(Request $request, $id)
+    {
+        $request->validate([
+            'profile_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // যেই user এর photo update হবে
+        $user = \App\Models\User::findOrFail($id);
+
+        // পুরানো ফটো delete
+        if ($user->profile_photo && file_exists(public_path('uploads/profile/' . $user->profile_photo))) {
+            unlink(public_path('uploads/profile/' . $user->profile_photo));
+        }
+
+        // নতুন ফটো upload
+        $file = $request->file('profile_photo');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/profile'), $filename);
+
+        // DB তে save
+        $user->profile_photo = $filename;
+        $user->save();
+
+        return back()->with('success', 'Profile photo updated successfully!');
+    }
+
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js    
     public function userRegister(Request $request) {
         if ($request->ajax()) { // if the request is coming via an AJAX call

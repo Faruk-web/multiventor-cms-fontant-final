@@ -322,7 +322,7 @@ Route::get('post/newsfeed', 'App\Http\Controllers\NewsFeetController@create');
 Route::get('customer/Wardrobe', 'App\Http\Controllers\NewsFeetController@Wardrobe')->name('customer.Wardrobe');
 // web.php
 Route::get('/customer/{id}', 'App\Http\Controllers\Front\UserController@profileshow')->name('customer.profileshow');
-
+Route::post('/profile/update-photo/{id}', 'App\Http\Controllers\Front\UserController@updatePhoto')->name('profile.update.photo');
 Route::get('vendors/product/{id}', 'App\Http\Controllers\NewsFeetController@vendorsproduct')->name('vendor.product');
 Route::post('/review/store', 'App\Http\Controllers\NewsFeetController@store')->name('review.store');
 Route::get('newsfeed/{id}/edit', 'App\Http\Controllers\NewsFeetController@edit')->name('newsfeed.edit');

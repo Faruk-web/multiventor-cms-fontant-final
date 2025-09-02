@@ -42,7 +42,10 @@ class NewsFeed extends Model
         return $this->hasMany(Comment::class, 'newsfeed_id')->whereNull('parent_id')->latest();
     }
 
-
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 
 
 

@@ -118,6 +118,29 @@
             ga('create', 'UA-XXXXX-Y', 'auto');
             ga('send', 'pageview')
         </script>
+
+        <!-- =============== .... part er kaj================ -->
+        {{-- JS --}}
+        <script>
+            function toggleActions(id) {
+                let el = document.getElementById('actions-' + id);
+                if(el.style.display === 'none' || el.style.display === '') {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+
+            // Optional: click outside to close
+            document.addEventListener('click', function(e) {
+                document.querySelectorAll('[id^="actions-"]').forEach(function(dropdown){
+                    if(!dropdown.contains(e.target) && !dropdown.previousElementSibling.contains(e.target)){
+                        dropdown.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+
         <script src="https://www.google-analytics.com/analytics.js" async defer></script>
         <!-- Modernizr-JS -->
         <script type="text/javascript" src="{{ url('front/js/vendor/modernizr-custom.min.js') }}"></script>

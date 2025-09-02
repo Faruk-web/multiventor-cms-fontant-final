@@ -22,7 +22,7 @@ class NewsFeetController extends Controller
     public function index()
     {
         // $newsfeed = DB::table('news_feeds')->distinct()->get();
-        $newsfeed = Newsfeed::with('likes','comments.user')->latest()->get();
+        $newsfeed = Newsfeed::with('likes','comments.user','user')->latest()->get();
         $allProducts = Product::pluck('product_name', 'id')->toArray();
         return view('newsfeed.index',compact('allProducts','newsfeed'));
     }

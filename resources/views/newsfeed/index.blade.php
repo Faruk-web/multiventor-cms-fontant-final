@@ -56,7 +56,7 @@
     display: flex;
     justify-content: space-between;
     padding: 14px 15px 1px;
-    font-size: 20px;
+    font-size:15px;
     color: #555;
     }
 
@@ -69,7 +69,7 @@
     }
 
     .post-actions i {
-    font-size: 30px;
+    font-size:18px;
     }
     .item-img-wrapper-link:before{
       background-color: none;
@@ -104,25 +104,34 @@
       {{-- Header --}}
       <div class="post-header d-flex justify-between align-center">
         <div class="d-flex align-center">
-          <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="avatar">
+          <img src="{{ $item->user->profile_photo  
+                          ? asset('uploads/profile/' . $item->user->profile_photo ) 
+                          : 'https://i.ibb.co/ZYW3VTp/brown-brim.png' }}"  alt="avatar">
           <a href="{{ route('customer.profileshow', $item->user_id) }}">
           <div class="username">{{ $item->name }}</div>
              </a>
         </div>
 
         @if(auth()->id() === $item->user_id)
-          <div class="header-actions">
-            <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit">
-              <i class="fas fa-edit"></i>
-            </a>
-            <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
-              @csrf
-              @method('DELETE')
-              <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </form>
-          </div>
+              <div class="header-actions" style="position: relative; display: inline-block;">
+                  {{-- Three dots icon --}}
+                  <span class="dots-icon" style="cursor: pointer; font-size: 18px;" onclick="toggleActions({{ $item->id }})">
+                      &#8230; {{-- HTML entity for ... --}}
+                  </span>
+                  {{-- Hidden edit/delete icons --}}
+                  <div id="actions-{{ $item->id }}" style="display: none; position: absolute; top: 20px; right: 0; background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px; z-index: 100;">
+                      <a href="{{ route('newsfeed.edit', $item->id) }}" title="Edit" >
+                          <i class="fas fa-edit" style="margin-left: 6px;"></i>
+                      </a>
+                      <form action="{{ route('newsfeed.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" style="background:none; border:none; color:red; cursor:pointer;">
+                              <i class="fas fa-trash-alt"></i>
+                          </button>
+                      </form>
+                  </div>
+              </div>
         @endif
       </div>
 
