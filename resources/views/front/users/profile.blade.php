@@ -355,12 +355,14 @@
     <div class="container">
        @forelse($user->followers as $follower)
             <div class="post mb-2 p-2 border rounded">
+              <a href="{{ route('customer.profileshow', $follower->id) }}">
                 <div class="d-flex align-items-center">
                     <img src="https://randomuser.me/api/portraits/men/10.jpg" 
                          alt="{{ $follower->name }}" 
                          width="40" height="40" class="rounded-circle me-2">
                     <span style="margin-left:12px">{{ $follower->name }}</span>
                 </div>
+               </a>
             </div>
         @empty
             <div class="post p-2">
